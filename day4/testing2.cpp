@@ -8,8 +8,8 @@
 using namespace std;
 
 int main() {
-  std::ifstream inputFile("input.txt");  // Replace "your_input_file.txt" with
-  vector<int> multipliers(214, 1);                   // the actual file name
+  std::ifstream inputFile("inputsm.txt");  // Replace "your_input_file.txt" with
+  vector<int> multipliers(6, 1);                   // the actual file name
   string line;
   long long int res = 0;
   int idx = 0;
@@ -32,15 +32,17 @@ int main() {
     if (match > 0) {
       for (int i = 1; i <= match; ++i) {
         int cur = idx+i;
-        if (cur < 214) {
+        cout << "cur is " << cur << endl;
+        if (cur < 6) {
           multipliers[cur]+=c_mult;
         }
       }
     }
     ++idx;
   }
-  for (int i: multipliers) {
-    res+=i;
+  for (int i = 0; i < multipliers.size(); ++i) {
+    cout << "i " << i << " is " << multipliers[i] << endl;
+    res+=multipliers[i];
   }
   cout << "res is " << res << endl;
   return 0;
