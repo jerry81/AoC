@@ -4,6 +4,12 @@
 
 using namespace std;
 
+struct GridToken {
+  int r = 0;
+  int cs = 0;
+  int ce = 0;
+  int val = 0;
+};
 int main() {
   vector<string> grid = {
 ".......855.442......190..................................969..........520.......59.............................................172..........",
@@ -149,6 +155,32 @@ int main() {
 };
 
   vector<pair<int,int>> EIGHT_D = {{1,1},{-1,1},{1,-1},{-1,-1}, {0,1}, {1,0}, {0,-1}, {-1,0}};
+  vector<GridToken> tokens;
+  // get a list of numbers with row, cols cole, number;
+  for (int i = 0; i < grid.size(); ++i) {
+    string r = grid[i];
+    string cur_n = "";
+    for (int j = 0; j < r.size(); ++j) {
+      char c = r[j];
+      if (isdigit(c)) {
+        cur_n+=string(1,c);
+      } else {
+        if (!cur_n.empty()) {
+          GridToken g;
+          g.val = stoi(cur_n);
+          g.r = i;
+          g.ce = j-1;
+          g.cs = j-cur_n.size();
+          tokens.push_back(g);
+          cur_n = "";
+        }
+      }
+    }
+  }
+
+  for (GridToken g: tokens) {
+
+  }
 
   return 0;
 }
