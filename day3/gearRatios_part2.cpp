@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 
@@ -194,10 +195,11 @@ int main() {
   }
 
 
-  int res = 0;
+  long long int res = 0;
 
   for (GridToken g: tokens) {
     int r = g.r;
+     unordered_set<string> visited;
     for (int i = g.cs; i <= g.ce; ++i) {
 
       // check neighbors of grid[r][i];
@@ -207,9 +209,11 @@ int main() {
         if (nr < 0 || nr >=grid[r].size()) continue;
         if (nc < 0 || nc >= grid[r].size()) continue;
         char test = grid[nr][nc];
-        if (test == '*') {
-          string hsh = get_h(nr,nc);
+        string hsh = get_h(nr,nc);
+        if (test == '*' && visited.find(hsh) == visited.end()) {
+
           gears[hsh].push_back(g.val);
+          visited.insert(hsh);
         }
       }
 
@@ -218,8 +222,9 @@ int main() {
   }
 
   for (auto [k,v]: gears) {
+    cout << "k is " << k << "v.size is " << v.size() << endl;
     if (v.size() ==2) {
-      res+=v[0]*v[1];
+      res+=(long long int) v[0]*v[1];
     }
   }
 
