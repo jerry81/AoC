@@ -176,11 +176,44 @@ int main() {
         }
       }
     }
+      if (!cur_n.empty()) {
+      GridToken g;
+      g.val = stoi(cur_n);
+      g.r = i;
+      g.ce = r.size()-1;
+      g.cs = g.ce-cur_n.size();
+      tokens.push_back(g);
+    }
+
   }
+
+
+  int res = 0;
 
   for (GridToken g: tokens) {
-
+    int r = g.r;
+    for (int i = g.cs; i <= g.ce; ++i) {
+      bool hasSymbol = false;
+      // check neighbors of grid[r][i];
+      for (auto [dy,dx]: EIGHT_D) {
+        int nr = r+dy;
+        int nc = i+dx;
+        if (nr < 0 || nr >=grid[r].size()) continue;
+        if (nc < 0 || nc >= grid[r].size()) continue;
+        char test = grid[nr][nc];
+        if (test != '.' && !isdigit(test)) {
+          hasSymbol = true;
+          break;
+        }
+      }
+      if (hasSymbol) {
+        res+=g.val;
+        break;
+      }
+    }
   }
+
+  cout << "res is " << res << endl;
 
   return 0;
 }
