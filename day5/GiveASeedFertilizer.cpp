@@ -24,7 +24,7 @@ struct Mapping {
   }
 };
 
-void populateMap(ifstream& strm, unordered_map<int, Mapping>& outV) {
+void populateMap(ifstream& strm, unordered_map<long long int, Mapping>& outV) {
   string line;
   while (getline(strm, line)) {
     istringstream spaceStream(line);
@@ -44,13 +44,13 @@ void populateMap(ifstream& strm, unordered_map<int, Mapping>& outV) {
 }
 
 int main() {
-  unordered_map<int, Mapping> seedToSoilMap;  // int is start of source
-  unordered_map<int, Mapping> soilToFertMap;
-  unordered_map<int, Mapping> fertToWaterMap;
-  unordered_map<int, Mapping> waterToLightMap;
-  unordered_map<int, Mapping> lightToTempMap;
-  unordered_map<int, Mapping> tempToHumidityMap;
-  unordered_map<int, Mapping> humidityToLocationMap;
+  unordered_map<long long int, Mapping> seedToSoilMap;  // int is start of source
+  unordered_map<long long int, Mapping> soilToFertMap;
+  unordered_map<long long int, Mapping> fertToWaterMap;
+  unordered_map<long long int, Mapping> waterToLightMap;
+  unordered_map<long long int, Mapping> lightToTempMap;
+  unordered_map<long long int, Mapping> tempToHumidityMap;
+  unordered_map<long long int, Mapping> humidityToLocationMap;
 
   string folder = "inputs";
   ifstream seeds("./" + folder + "/seeds.txt");
@@ -91,7 +91,7 @@ int main() {
   for (long long int seedItem : seedsv) {
     long long int src = seedItem;
     bool found = false;
-    vector<unordered_map<int, Mapping>> maps = {
+    vector<unordered_map<long long int, Mapping>> maps = {
         seedToSoilMap,        soilToFertMap,  fertToWaterMap,
         waterToLightMap,      lightToTempMap, tempToHumidityMap,
         humidityToLocationMap};
