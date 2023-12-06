@@ -83,10 +83,10 @@ int main() {
   // lowest location number
   int lowest = INT_MAX;
 
-  for (auto [k, v] : seedToSoilMap) {
-    cout << "checking " << k << endl;
-    v.print();
-  }
+  // for (auto [k, v] : seedToSoilMap) {
+  //   cout << "checking " << k << endl;
+  //   v.print();
+  // }
 
   for (int seedItem : seedsv) {
     int src = seedItem;
@@ -104,9 +104,9 @@ int main() {
           break;
         }
       }
-      lowest = min(lowest, src);
     }
+    lowest = min(lowest, src);
   }
-
-  return lowest;
+  cout << "lowest is " << lowest << endl;
+  return 0;
 }
