@@ -44,6 +44,7 @@ void populateMap(ifstream& strm, unordered_map<long long int, Mapping>& outV) {
 }
 
 int main() {
+  unordered_map<long long int, Mapping> seedRanges;
   unordered_map<long long int, Mapping>
       seedToSoilMap;  // int is start of source
   unordered_map<long long int, Mapping> soilToFertMap;
@@ -66,7 +67,6 @@ int main() {
 
   string line;
   vector<long long int> preSeed;
-  vector<long long int> seedsv;
   while (getline(seeds, line)) {
     istringstream spaceStream(line);
     string spaceToken;
@@ -76,12 +76,12 @@ int main() {
   }
 
   for (int i = 0; i < preSeed.size(); i+=2) {
-    int st = preSeed[i];
-    int rng = preSeed[i+1];
-    cout << "st is " << st << " and rng is " << rng << endl;
-    for (int j = 0; j < rng; ++j) {
-      seedsv.push_back(st+j);
-    }
+    long long int st = preSeed[i];
+    long long int rng = preSeed[i+1];
+    Mapping m;
+    m.ss = st;
+    m.se = st+rng;
+    seedRanges[m.ss] = m;
   }
 
   populateMap(seedToSoil, seedToSoilMap);
