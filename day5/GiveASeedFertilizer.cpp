@@ -9,11 +9,11 @@
 using namespace std;
 
 struct Mapping {
-  int ss;  // unnecessary?
-  int se;
-  int ds;
-  int de;
-  int offset;  // from source to destination
+  long long int ss;  // unnecessary?
+  long long int se;
+  long long int ds;
+  long long int de;
+  long long int offset;  // from source to destination
   void print() {
     cout << "mapping " << endl;
     cout << "src start " << ss << "\n";
@@ -32,7 +32,7 @@ void populateMap(ifstream& strm, unordered_map<int, Mapping>& outV) {
     Mapping cur_m;
     vector<int> map_vals;
     while (spaceStream >> tk) {
-      map_vals.push_back(stoi(tk));
+      map_vals.push_back(stoll(tk));
     }
     cur_m.ds = map_vals[0];
     cur_m.ss = map_vals[1];
@@ -63,13 +63,12 @@ int main() {
   ifstream humidityToLocation("./" + folder + "/humidityToLocation.txt");
 
   string line;
-  long long int res = 0;
-  vector<int> seedsv;
+  vector<long long int> seedsv;
   while (getline(seeds, line)) {
     istringstream spaceStream(line);
     string spaceToken;
     while (spaceStream >> spaceToken) {
-      seedsv.push_back(stoi(spaceToken));
+      seedsv.push_back(stoll(spaceToken));
     }
   }
 
@@ -82,15 +81,15 @@ int main() {
   populateMap(humidityToLocation, humidityToLocationMap);
 
   // lowest location number
-  int lowest = INT_MAX;
+  long long int lowest = LLONG_MAX;
 
   // for (auto [k, v] : seedToSoilMap) {
   //   cout << "checking " << k << endl;
   //   v.print();
   // }
 
-  for (int seedItem : seedsv) {
-    int src = seedItem;
+  for (long long int seedItem : seedsv) {
+    long long int src = seedItem;
     bool found = false;
     vector<unordered_map<int, Mapping>> maps = {
         seedToSoilMap,        soilToFertMap,  fertToWaterMap,
