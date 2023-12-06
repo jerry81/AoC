@@ -52,14 +52,15 @@ int main() {
   unordered_map<int, Mapping> tempToHumidityMap;
   unordered_map<int, Mapping> humidityToLocationMap;
 
-  ifstream seeds("./sminputs/seeds.txt");
-  ifstream seedToSoil("./sminputs/seedToSoil.txt");
-  ifstream soilToFert("./sminputs/soilToFert.txt");
-  ifstream fertToWater("./sminputs/fertToWater.txt");
-  ifstream waterToLight("./sminputs/waterToLight.txt");
-  ifstream lightToTemp("./sminputs/lightToTemp.txt");
-  ifstream tempToHumidity("./sminputs/tempToHumidity.txt");
-  ifstream humidityToLocation("./sminputs/humidityToLocation.txt");
+  string folder = "inputs";
+  ifstream seeds("./" + folder + "/seeds.txt");
+  ifstream seedToSoil("./" + folder + "/seedToSoil.txt");
+  ifstream soilToFert("./" + folder + "/soilToFert.txt");
+  ifstream fertToWater("./" + folder + "/fertToWater.txt");
+  ifstream waterToLight("./" + folder + "/waterToLight.txt");
+  ifstream lightToTemp("./" + folder + "/lightToTemp.txt");
+  ifstream tempToHumidity("./" + folder + "/tempToHumidity.txt");
+  ifstream humidityToLocation("./" + folder + "/humidityToLocation.txt");
 
   string line;
   long long int res = 0;
