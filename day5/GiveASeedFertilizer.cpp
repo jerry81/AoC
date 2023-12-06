@@ -80,6 +80,33 @@ int main() {
   populateMap(tempToHumidity, tempToHumidityMap);
   populateMap(humidityToLocation, humidityToLocationMap);
 
+  // lowest location number
+  int lowest = INT_MAX;
 
-  return 0;
+  for (auto [k, v] : seedToSoilMap) {
+    cout << "checking " << k << endl;
+    v.print();
+  }
+
+  for (int seedItem : seedsv) {
+    int src = seedItem;
+    bool found = false;
+    vector<unordered_map<int, Mapping>> maps = {
+        seedToSoilMap,        soilToFertMap,  fertToWaterMap,
+        waterToLightMap,      lightToTempMap, tempToHumidityMap,
+        humidityToLocationMap};
+    for (auto m : maps) {
+      for (auto [startSrc, mapping] : m) {
+        if (src >= startSrc && src < mapping.se) {
+          // range found
+          found = true;
+          src = src + mapping.offset;
+          break;
+        }
+      }
+      lowest = min(lowest, src);
+    }
+  }
+
+  return lowest;
 }
