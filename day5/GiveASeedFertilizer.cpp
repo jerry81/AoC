@@ -30,7 +30,7 @@ void populateMap(ifstream& strm, unordered_map<long long int, Mapping>& outV) {
     istringstream spaceStream(line);
     string tk;
     Mapping cur_m;
-    vector<int> map_vals;
+    vector<long long int> map_vals;
     while (spaceStream >> tk) {
       map_vals.push_back(stoll(tk));
     }
@@ -44,7 +44,8 @@ void populateMap(ifstream& strm, unordered_map<long long int, Mapping>& outV) {
 }
 
 int main() {
-  unordered_map<long long int, Mapping> seedToSoilMap;  // int is start of source
+  unordered_map<long long int, Mapping>
+      seedToSoilMap;  // int is start of source
   unordered_map<long long int, Mapping> soilToFertMap;
   unordered_map<long long int, Mapping> fertToWaterMap;
   unordered_map<long long int, Mapping> waterToLightMap;
@@ -61,6 +62,7 @@ int main() {
   ifstream lightToTemp("./" + folder + "/lightToTemp.txt");
   ifstream tempToHumidity("./" + folder + "/tempToHumidity.txt");
   ifstream humidityToLocation("./" + folder + "/humidityToLocation.txt");
+
 
   string line;
   vector<long long int> seedsv;
@@ -80,6 +82,26 @@ int main() {
   populateMap(tempToHumidity, tempToHumidityMap);
   populateMap(humidityToLocation, humidityToLocationMap);
 
+
+  vector<unordered_map<long long int, Mapping>> maps = {
+      seedToSoilMap,  soilToFertMap,     fertToWaterMap,       waterToLightMap,
+      lightToTempMap, tempToHumidityMap, humidityToLocationMap};
+
+  // cout << "population done " << endl;
+  // for (auto [k,v]: seedToSoilMap) {
+  //   cout << "k " << k << endl;
+  //   v.print();
+  // }
+  // for (auto item: seedsv) {
+  //   cout << "item is " << item << endl;
+  // }
+  // for (auto m: maps) {
+  //   cout << "map " << endl;
+  //   for (auto [k,v]: m) {
+  //     cout << "printing " << k << endl;
+  //     v.print();
+  //   }
+  // }
   // lowest location number
   long long int lowest = LLONG_MAX;
 
@@ -90,16 +112,11 @@ int main() {
 
   for (long long int seedItem : seedsv) {
     long long int src = seedItem;
-    bool found = false;
-    vector<unordered_map<long long int, Mapping>> maps = {
-        seedToSoilMap,        soilToFertMap,  fertToWaterMap,
-        waterToLightMap,      lightToTempMap, tempToHumidityMap,
-        humidityToLocationMap};
+
     for (auto m : maps) {
       for (auto [startSrc, mapping] : m) {
         if (src >= startSrc && src < mapping.se) {
           // range found
-          found = true;
           src = src + mapping.offset;
           break;
         }
