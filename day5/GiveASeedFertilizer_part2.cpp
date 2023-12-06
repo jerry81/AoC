@@ -2,8 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
+#include <map>
 #include <vector>
 
 using namespace std;
@@ -24,7 +23,7 @@ struct Mapping {
   }
 };
 
-void populateMap(ifstream& strm, unordered_map<long long int, Mapping>& outV) {
+void populateMap(ifstream& strm, map<long long int, Mapping>& outV) {
   string line;
   while (getline(strm, line)) {
     istringstream spaceStream(line);
@@ -39,20 +38,73 @@ void populateMap(ifstream& strm, unordered_map<long long int, Mapping>& outV) {
     cur_m.offset = cur_m.ds - cur_m.ss;
     cur_m.de = cur_m.ds + map_vals[2];
     cur_m.se = cur_m.ss + map_vals[2];
-    outV[cur_m.ss] = cur_m;
+    outV[cur_m.ds] = cur_m;
   }
 }
 
+map<long long int, Mapping> mergeMaps(map<long long int, Mapping> src, map<long long int, Mapping> dest) {
+  map<long long int, Mapping> merged;
+  // example dest is humidity-to-location, src is temperature to humidity
+  /* dest
+    ds 56
+    de 60
+    ss 93
+    se 97
+    offset -37
+
+    ds 60
+    de 97
+    ss 56
+    se 93
+    offset 4
+
+    SRC
+    ds 0
+    de 1
+    ss 69
+    se 70
+    offset -69
+
+    ds 1
+    de 70
+    ss 0
+    se 69
+    offset 1
+
+    MERGED
+    ds 0
+    de 1
+    ss 69
+    se 70
+    offset -69
+
+    ds 1
+    de 56
+    ss 0
+    se 55
+    offset -54
+  */
+
+   for (auto [k,v]:dest) {
+     v.print();
+   };
+
+   for (auto [k,v]:src) {
+     v.print();
+   };
+   return dest;
+}
+
 int main() {
-  unordered_map<long long int, Mapping> seedRanges;
-  unordered_map<long long int, Mapping>
+  map<long long int, Mapping> seedRanges;
+  map<long long int, Mapping>
       seedToSoilMap;  // int is start of source
-  unordered_map<long long int, Mapping> soilToFertMap;
-  unordered_map<long long int, Mapping> fertToWaterMap;
-  unordered_map<long long int, Mapping> waterToLightMap;
-  unordered_map<long long int, Mapping> lightToTempMap;
-  unordered_map<long long int, Mapping> tempToHumidityMap;
-  unordered_map<long long int, Mapping> humidityToLocationMap;
+  map<long long int, Mapping> soilToFertMap;
+  map<long long int, Mapping> fertToWaterMap;
+  map<long long int, Mapping> waterToLightMap;
+  map<long long int, Mapping> lightToTempMap;
+  map<long long int, Mapping> tempToHumidityMap;
+  map<long long int, Mapping> humidityToLocationMap;
 
   string folder = "sminputs";
   ifstream seeds("./" + folder + "/seeds.txt");
@@ -93,26 +145,14 @@ int main() {
   populateMap(humidityToLocation, humidityToLocationMap);
 
 
-  vector<unordered_map<long long int, Mapping>> maps = {
+  vector<map<long long int, Mapping>> maps = {
       seedToSoilMap,  soilToFertMap,     fertToWaterMap,       waterToLightMap,
       lightToTempMap, tempToHumidityMap, humidityToLocationMap};
 
+
+  mergeMaps(tempToHumidityMap, humidityToLocationMap);
   long long int lowest = LLONG_MAX;
 
-  for (long long int seedItem : seedsv) {
-    long long int src = seedItem;
-
-    for (auto m : maps) {
-      for (auto [startSrc, mapping] : m) {
-        if (src >= startSrc && src < mapping.se) {
-          // range found
-          src = src + mapping.offset;
-          break;
-        }
-      }
-    }
-    lowest = min(lowest, src);
-  }
   cout << "lowest is " << lowest << endl;
   return 0;
 }
