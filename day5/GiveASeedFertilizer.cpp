@@ -24,6 +24,25 @@ struct Mapping {
   }
 };
 
+void populateMap(ifstream& strm, unordered_map<int, Mapping>& outV) {
+  string line;
+  while (getline(strm, line)) {
+    istringstream spaceStream(line);
+    string tk;
+    Mapping cur_m;
+    vector<int> map_vals;
+    while (spaceStream >> tk) {
+      map_vals.push_back(stoi(tk));
+    }
+    cur_m.ds = map_vals[0];
+    cur_m.ss = map_vals[1];
+    cur_m.offset = cur_m.ds - cur_m.ss;
+    cur_m.de = cur_m.ds + map_vals[2];
+    cur_m.se = cur_m.ss + map_vals[2];
+    outV[cur_m.ss] = cur_m;
+  }
+}
+
 int main() {
   unordered_map<int, Mapping> seedToSoilMap;  // int is start of source
   unordered_map<int, Mapping> soilToFertMap;
@@ -53,42 +72,14 @@ int main() {
     }
   }
 
-  while (getline(seedToSoil, line)) {
-    istringstream spaceStream(line);
-    string tk;
-    Mapping cur_m;
-    vector<int> map_vals;
-    while (spaceStream >> tk) {
-      map_vals.push_back(stoi(tk));
-    }
-    cur_m.ds = map_vals[0];
-    cur_m.ss = map_vals[1];
-    cur_m.offset = cur_m.ds - cur_m.ss;
-    cur_m.de = cur_m.ds + map_vals[2];
-    cur_m.se = cur_m.ss + map_vals[2];
-    seedToSoilMap[cur_m.ss] = cur_m;
-  }
+  populateMap(seedToSoil, seedToSoilMap);
+  populateMap(soilToFert, soilToFertMap);
+  populateMap(fertToWater, fertToWaterMap);
+  populateMap(waterToLight, waterToLightMap);
+  populateMap(lightToTemp, lightToTempMap);
+  populateMap(tempToHumidity, tempToHumidityMap);
+  populateMap(humidityToLocation, humidityToLocationMap);
 
-  while (getline(soilToFert, line)) {
-    istringstream spaceStream(line);
-    string tk;
-    Mapping cur_m;
-    vector<int> map_vals;
-    while (spaceStream >> tk) {
-      map_vals.push_back(stoi(tk));
-    }
-    cur_m.ds = map_vals[0];
-    cur_m.ss = map_vals[1];
-    cur_m.offset = cur_m.ds - cur_m.ss;
-    cur_m.de = cur_m.ds + map_vals[2];
-    cur_m.se = cur_m.ss + map_vals[2];
-    soilToFertMap[cur_m.ss] = cur_m;
-  }
-
-  for (auto [k, v] : soilToFertMap) {
-    cout << "src start " << k << endl;
-    v.print();
-  }
 
   return 0;
 }
