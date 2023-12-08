@@ -29,5 +29,5 @@ int main() {
       cnt++;
     }
   }
-  cout << "cnt " << cnt << endl;;
+  cout << "cnt " << cnt << endl;
 }
