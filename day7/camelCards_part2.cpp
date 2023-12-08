@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const string FNAME = "sminput.txt";
+const string FNAME = "input.txt";
 // types
 // FIVE 6
 // FOUR 5
@@ -83,6 +83,8 @@ struct Hand {
       } else if (jc == 3) {
         rnk = 5;
       } else if (jc == 4) {
+        rnk = 6;
+      } else if (jc == 5) {
         rnk = 6;
       }
     }
