@@ -17,14 +17,14 @@ const string FNAME = "sminput.txt";
 // ONE 1
 // H 0
 unordered_map<char, int> FACE = {
-  {'A', 14}, {'K', 13}, {'Q', 12}, {'J', 11}, {'T', 10}
+  {'A', 14}, {'K', 13}, {'Q', 12}, {'T', 10}, {'J', 1}
 };
 struct Hand {
   int score;
   string orig;
   vector<int> items;
   int rnk = 0;
-  int mx = INT_MIN;
+  int jc = 0;
   Hand(string s, string sc) {
     orig = s;
     unordered_map<int, int> freq;
@@ -32,7 +32,7 @@ struct Hand {
       int item = isdigit(c) ? c - '0' : FACE[c];
       items.push_back(item);
       freq[item]++;
-      mx = max(mx, item);
+      if (item == 1) jc++;
     }
     bool triple = false;
     bool quint = false;
@@ -42,6 +42,7 @@ struct Hand {
     bool fullhouse = false;
 
     for (auto [k,v]: freq) {
+      if (k == 1) continue;
       if (v == 5) quint = true;
       if (v == 4) quad = true;
       if (v == 3) {
@@ -56,14 +57,34 @@ struct Hand {
       rnk = 6;
     } else if (quad) {
       rnk = 5;
+      if (jc >= 1) rnk++;
     } else if (pair && triple) {
       rnk = 4;
     } else if (triple) {
-      rnk = 3;
+     rnk = 3;
+      if (jc == 1) rnk = 5;
+      if (jc == 2) rnk = 6;
+
     } else if (twopair) {
-      rnk = 2;
+    rnk = 2;
+      if (jc == 1) rnk = 4;
+
     } else if (pair) {
       rnk = 1;
+      if (jc == 1) rnk = 3;
+      if (jc == 2) rnk = 5;
+      if (jc == 3) rnk = 6;
+
+    } else {
+      if (jc == 1) {
+        rnk = 1;
+      } else if (jc == 2) {
+        rnk = 3;
+      } else if (jc == 3) {
+        rnk = 5;
+      } else if (jc == 4) {
+        rnk = 6;
+      }
     }
     score = stoi(sc);
   }
@@ -81,11 +102,6 @@ bool compare_hands(const Hand a, const Hand b) {
   if (a.rnk != b.rnk) {
     return a.rnk < b.rnk;
   } else {
-    if (a.rnk == 0) {
-      if (a.mx != b.mx) {
-        // return a.mx < b.mx;
-      }
-    }
     vector<int> ai = a.items;
     vector<int> bi = b.items;
     for (int i = 0; i < ai.size(); ++i) {
@@ -116,12 +132,12 @@ int main() {
   long long int multi = 1;
   long long int res = 0;
   for (auto h: hands) {
-    cout << h.orig << ": " << h.rnk << ", high card " << h.mx << endl;
-    cout << "adding " << multi << " times " << h.score << endl;
+    cout << "h is " << h.orig << " rank is  " << h.rnk << " and jc is " << h.jc << endl;
+    // cout << "adding " << multi << " times " << h.score << endl;
     long long int toAdd = (multi * (long long int)h.score);
     // cout << "toAdd " << toAdd << endl;
     res += toAdd;
-    cout << "res is currently " << res << endl;
+    // cout << "res is currently " << res << endl;
    //  h.print();
     multi++;
     // cout << "multi is " << multi << endl;
