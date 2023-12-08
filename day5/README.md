@@ -121,3 +121,6 @@ dest 50 src 98 range 2
 dest 52 src 50 range 48
 79 -> 81
 55 -> 57
+
+- tables are mergable
+- seems there is a way to combine tables - take all ranges and sort by start.  then take the last highest two endings and use them to make the final 2 ranges that cannot be calculated by just range starts

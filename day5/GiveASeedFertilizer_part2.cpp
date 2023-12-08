@@ -42,7 +42,7 @@ void populateMap(ifstream& strm, map<long long int, Mapping>& outV) {
   }
 }
 
-map<long long int, Mapping> mergeMaps(map<long long int, Mapping> src, map<long long int, Mapping> dest) {
+map<long long int, Mapping> mergeMaps(map<long long int, Mapping> dest, map<long long int, Mapping> src) {
   map<long long int, Mapping> merged;
   // example dest is humidity-to-location, src is temperature to humidity
   /* dest
