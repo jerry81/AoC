@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const string FNAME = "sminput.txt";
+const string FNAME = "input.txt";
 
 int main() {
   long long int sm = 0;
