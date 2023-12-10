@@ -35,12 +35,17 @@ int main() {
         cur_line.push_back(diff);
         if (diff != 0) all_zeros = false;
       }
-      cout << "pushing " << endl;
-      for (int c: cur_line) {
-        cout << c << endl;
-      }
       stk.push_back(cur_line);
     }
+    // we have a stk.  now add an item to the end;
+    int prev = 0;
+    while (!stk.empty()) {
+      vector<int> cur = stk.back();
+      stk.pop_back();
+      int ender = cur.back() + prev;
+      prev = ender;
+    }
+    sm+=prev;
   }
   cout << "sum " << sm << endl;
   return 0;
