@@ -40,8 +40,11 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
   string curS = to_h(pos);
   if (!accum.empty()) prev = accum.back();
 
+  cout << "prev is " << prev << endl;
+  cout << "curS is " << curS << endl;
   if (!empty(prev) && curS == startS) {
     paths.push_back(accum);
+    cout << "returning! " << endl;
     return;
   }
   char cur_char = grid[cy][cx];
@@ -62,6 +65,20 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
     char nxt_char = grid[nr][nc];
     vector<string> accum_cpy = accum;
     switch (cur_char) {
+      case 'S': {
+        if (direction == 'L') {
+          if (nxt_char == 'J' || nxt_char == '7' || nxt_char == '|') break;
+        } else if (direction == 'R') {
+          if (nxt_char == 'L' || nxt_char == '|' || nxt_char == 'F') break;
+        } else if (direction == 'U') {
+          if (nxt_char == '-' || nxt_char == 'L' || nxt_char == 'J') break;
+        } else {
+          if (nxt_char == '-' || nxt_char == 'F' || nxt_char == '7') break;
+        }
+        accum_cpy.push_back(nxt_as_h);
+        findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
+        break;
+      }
       case '|': {
         // DOWN and UP -> '|'
         // UP -> '7', 'F'
@@ -73,7 +90,7 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
           if (nxt_char == 'F' || nxt_char == '7') break;
         }
         accum_cpy.push_back(nxt_as_h);
-        findLoop({nr,nc}, accum_cpy, h,w,grid,startS);
+        findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
         break;
       }
       case '-': {
@@ -84,35 +101,34 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
           if (nxt_char == 'F' || nxt_char == 'L') break;
         }
         accum_cpy.push_back(nxt_as_h);
-        findLoop({nr,nc}, accum_cpy, h,w,grid,startS);
+        findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
 
         break;
       }
       case 'J': {
         if (direction != 'U' || direction != 'R') break;
         accum_cpy.push_back(nxt_as_h);
-        findLoop({nr,nc}, accum_cpy, h,w,grid,startS);
+        findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
         break;
       }
       case '7': {
         if (direction != 'R' || direction != 'U') break;
         accum_cpy.push_back(nxt_as_h);
-        findLoop({nr,nc}, accum_cpy, h,w,grid,startS);
+        findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
         break;
       }
       case 'L': {
         if (direction != 'D' || direction != 'L') break;
         accum_cpy.push_back(nxt_as_h);
-        findLoop({nr,nc}, accum_cpy, h,w,grid,startS);
+        findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
         break;
       }
       default: {  // 'F'
         if (direction != 'U' || direction != 'L') break;
         accum_cpy.push_back(nxt_as_h);
-        findLoop({nr,nc}, accum_cpy, h,w,grid,startS);
+        findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
       }
     }
-
   }
 }
 
