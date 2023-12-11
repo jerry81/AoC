@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "sm2.txt";
 
 string to_h(pair<int, int> pos) {
   auto [f, s] = pos;
@@ -38,6 +38,7 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
   if (cy >= h) return;
   if (cx >= w) return;
   string curS = to_h(pos);
+
   if (!accum.empty()) prev = accum.back();
 
   if (!empty(prev) && curS == startS) {
@@ -45,7 +46,6 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
     return;
   }
   char cur_char = grid[cy][cx];
-
   for (auto [direction, newpos] :
        MOVES) {  // direction is current move direction from cur to nxt
     auto [dy, dx] = newpos;
@@ -57,11 +57,13 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
     if (nc >= w) continue;
 
     string nxt_as_h = to_h({nr, nc});
-    if (curS == nxt_as_h) continue;  // dont move backwards
+    if (prev == nxt_as_h) continue;  // dont move backwards
 
     char nxt_char = grid[nr][nc];
+    if (nxt_char == '.') continue;
     vector<string> accum_cpy = accum;
     switch (cur_char) {
+      case '.': { break; }
       case 'S': {
         if (direction == 'L') {
           if (nxt_char == 'J' || nxt_char == '7' || nxt_char == '|') break;
@@ -72,7 +74,7 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
         } else {
           if (nxt_char == '-' || nxt_char == 'F' || nxt_char == '7') break;
         }
-        accum_cpy.push_back(nxt_as_h);
+        accum_cpy.push_back(curS);
         findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
         break;
       }
@@ -86,7 +88,7 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
         } else if (direction == 'D') {
           if (nxt_char == 'F' || nxt_char == '7') break;
         }
-        accum_cpy.push_back(nxt_as_h);
+        accum_cpy.push_back(curS);
         findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
         break;
       }
@@ -97,32 +99,54 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
         } else if (direction == 'R') {
           if (nxt_char == 'F' || nxt_char == 'L') break;
         }
-        accum_cpy.push_back(nxt_as_h);
+        accum_cpy.push_back(curS);
         findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
 
         break;
       }
       case 'J': {
-        if (direction != 'U' || direction != 'R') break;
-        accum_cpy.push_back(nxt_as_h);
+        if (direction != 'U' && direction != 'L') break;
+        if (direction == 'U') {
+          if (nxt_char == 'L' || nxt_char == 'J') break;
+        } else if (direction == 'L') {
+          if (nxt_char == 'J' || nxt_char == '7') break;
+        }
+        accum_cpy.push_back(curS);
         findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
         break;
       }
       case '7': {
-        if (direction != 'R' || direction != 'U') break;
-        accum_cpy.push_back(nxt_as_h);
+        if (direction != 'L' && direction != 'D') break;
+        if (direction == 'L') {
+          if (nxt_char == 'J' || nxt_char == '7') break;
+        } else if (direction == 'D') {
+          if (nxt_char == 'F' || nxt_char == '7') break;
+        }
+        accum_cpy.push_back(curS);
         findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
         break;
       }
       case 'L': {
-        if (direction != 'D' || direction != 'L') break;
-        accum_cpy.push_back(nxt_as_h);
+        if (direction != 'R' && direction != 'U') break;
+        if (direction == 'R') {
+          if (nxt_char == 'F' || nxt_char == 'L') break;
+
+        } else if (direction == 'U') {
+          if (nxt_char == 'J' || nxt_char == 'L') break;
+        }
+        accum_cpy.push_back(curS);
         findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
         break;
       }
       default: {  // 'F'
-        if (direction != 'U' || direction != 'L') break;
-        accum_cpy.push_back(nxt_as_h);
+        if (direction != 'R' && direction != 'D') break;
+        if (direction == 'R') {
+          if (nxt_char == 'F' || nxt_char == 'L') break;
+
+        } else if (direction == 'D') {
+          if (nxt_char == 'F' || nxt_char == '7') break;
+        }
+        accum_cpy.push_back(curS);
         findLoop({nr, nc}, accum_cpy, h, w, grid, startS);
       }
     }
@@ -153,6 +177,7 @@ int main() {
   string starthsh = to_h(start);
   findLoop(start, {}, width, height, grid, starthsh);
   cout << "size is " << paths.size() << endl;
+  cout << "ans is " << paths[0].size() / 2;
   return 0;
   // we have a grid
   // we have start position
