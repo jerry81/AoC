@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 long long int counter = 1;
 
@@ -69,8 +69,8 @@ int main() {
   auto [f, s] = start;
   Bounds current_bounds;
 
-  //  pair<int, int> cur = {128, 37};
-  pair<int, int> cur = {1, 2};
+   pair<int, int> cur = {128, 37};
+  // pair<int, int> cur = {1, 2};
   // pair<int, int> cur = {2, 1};
 
   current_bounds.x1 = s;
