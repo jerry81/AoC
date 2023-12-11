@@ -3,15 +3,24 @@
 #include <sstream>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
+
 #include <vector>
 
 using namespace std;
 
-const string FNAME = "sm2.txt";
+const string FNAME = "input.txt";
+
+long long int counter = 0;
 
 string to_h(pair<int, int> pos) {
   auto [f, s] = pos;
+
   return to_string(f) + "," + to_string(s);
+}
+
+string d_to_h(pair<int,int> pos, char direction) {
+  return to_h(pos) + ","+string(1,direction);
 }
 
 pair<int, int> to_pos(string s) {
@@ -28,6 +37,8 @@ unordered_map<char, pair<int, int>> MOVES = {
     {'L', {0, -1}}   // L
 };
 
+unordered_set<string> visited;
+
 void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
               vector<string>& grid, string& startS) {
   string prev = "";
@@ -39,6 +50,7 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
   if (cx >= w) return;
   string curS = to_h(pos);
 
+
   if (!accum.empty()) prev = accum.back();
 
   if (!empty(prev) && curS == startS) {
@@ -46,6 +58,7 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
     return;
   }
   char cur_char = grid[cy][cx];
+  if (cur_char == '.') return;
   for (auto [direction, newpos] :
        MOVES) {  // direction is current move direction from cur to nxt
     auto [dy, dx] = newpos;
@@ -59,6 +72,12 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
     string nxt_as_h = to_h({nr, nc});
     if (prev == nxt_as_h) continue;  // dont move backwards
 
+    string str = d_to_h({nr,nc}, direction);
+    if (visited.find(str) != visited.end()) {
+      return;
+    }
+
+    visited.insert(str);
     char nxt_char = grid[nr][nc];
     if (nxt_char == '.') continue;
     vector<string> accum_cpy = accum;
@@ -173,8 +192,11 @@ int main() {
     }
     row++;
   }
+  cout << "height is " << height << endl;;
+  cout << "width is " << width << endl;
   auto [f, s] = start;
   string starthsh = to_h(start);
+  cout << "start is at " << starthsh << endl;
   findLoop(start, {}, width, height, grid, starthsh);
   cout << "size is " << paths.size() << endl;
   cout << "ans is " << paths[0].size() / 2;
