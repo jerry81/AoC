@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const string FNAME = "input.txt";
+const string FNAME = "sm3.txt";
 
 long long int counter = 1;
 
@@ -69,9 +69,11 @@ int main() {
   auto [f, s] = start;
   Bounds current_bounds;
 
-   pair<int, int> cur = {128, 37};
+  //  pair<int, int> cur = {128, 37};
   // pair<int, int> cur = {1, 2};
   // pair<int, int> cur = {2, 1};
+  // pair<int, int> cur = {1, 4};
+  pair<int, int> cur = {1,2};
 
   current_bounds.x1 = s;
   current_bounds.y1 = f;
@@ -79,12 +81,14 @@ int main() {
   unordered_set<string> in_path;
   in_path.insert(to_h(start));
 
-  char dir = 'R';
+  // char dir = 'R';
+    char dir = 'R';
+
   cout << "start.first " << start.first << endl;
   cout << "start.second " << start.second << endl;
   while (cur.first != start.first || cur.second != start.second) {
     char cur_c = grid[cur.first][cur.second];
-      in_path.insert(to_h(cur));
+    in_path.insert(to_h(cur));
 
     counter++;
     if (cur_c == 'J') {
@@ -162,7 +166,7 @@ int main() {
 
   for (int i = 0; i < height; ++i) {
     for (int j = 0; j < width; ++j) {
-      if (in_path.find(to_h({i,j})) != in_path.end()) continue;
+      if (in_path.find(to_h({i, j})) != in_path.end()) continue;
       int intersections = 0;
       for (Bounds b : edges) {
         if (intersects(i, j, b)) {
@@ -172,6 +176,7 @@ int main() {
         }
       }
       if (intersections % 2 == 1) {
+        cout << "bounded found at " << i << " , " << j << endl;
         boundeds++;
       }
     }
