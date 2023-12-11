@@ -4,14 +4,13 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-
 #include <vector>
 
 using namespace std;
 
 const string FNAME = "input.txt";
 
-long long int counter = 0;
+long long int counter = 1;
 
 unordered_map<char, pair<int, int>> MOVES = {
     {'U', {-1, 0}},  // U
@@ -39,13 +38,13 @@ int main() {
     row++;
   }
   auto [f, s] = start;
-  pair<int, int> prev = start;
-  pair<int, int> cur = {128,37};
+  pair<int, int> cur = {128, 37};
   char dir = 'R';
-  int ct = 0;
-  while (cur.first != start.first && cur.second !=start.second) {
+  cout << "start.first " << start.first << endl;;
+  cout << "start.second " << start.second << endl;;
+  while (cur.first != start.first || cur.second != start.second) {
     char cur_c = grid[cur.first][cur.second];
-    ct++;
+    counter++;
     if (cur_c == 'J') {
       if (dir == 'R') {
         cur.first--;
@@ -56,17 +55,45 @@ int main() {
       }
 
     } else if (cur_c == 'F') {
-      cur.second++;
+      if (dir == 'U') {
+        cur.second++;
+        dir = 'R';
+      } else {
+        cur.first++;
+        dir = 'D';
+      }
     } else if (cur_c == '|') {
-      cur.first++;
+      if (dir == 'D') {
+        cur.first++;
+
+      } else {
+        cur.first--;
+      }
     } else if (cur_c == '-') {
-      cur.second++;
+      if (dir == 'R') {
+        cur.second++;
+      } else {
+        cur.second--;
+      }
     } else if (cur_c == 'L') {
-      cur.second++;
+      if (dir == 'D') {
+        cur.second++;
+        dir = 'R';
+      } else {
+        cur.first--;
+        dir = 'U';
+      }
     } else if (cur_c == '7') {
-      cur.first++;
+      if (dir == 'R') {
+        cur.first++;
+        dir = 'D';
+      } else {
+        cur.second--;
+        dir = 'L';
+      }
     }
   }
+  cout << "cnt is " << counter << endl;
   return 0;
   // we have a grid
   // we have start position
