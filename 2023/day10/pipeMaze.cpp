@@ -40,11 +40,8 @@ void findLoop(pair<int, int> pos, vector<string> accum, int& h, int& w,
   string curS = to_h(pos);
   if (!accum.empty()) prev = accum.back();
 
-  cout << "prev is " << prev << endl;
-  cout << "curS is " << curS << endl;
   if (!empty(prev) && curS == startS) {
     paths.push_back(accum);
-    cout << "returning! " << endl;
     return;
   }
   char cur_char = grid[cy][cx];
