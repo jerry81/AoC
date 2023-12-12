@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const string FNAME = "sm3.txt";
+const string FNAME = "medium.txt";
 
 long long int counter = 1;
 
@@ -63,6 +63,31 @@ bool intersectsV(int sy, int sx, Bounds b) {
   return true;
 }
 
+bool intersects(int sy, int sx, Bounds b, int h, int w) {
+  // just vertical line, increasing y
+  int mny = min(b.y1, b.y2);
+  int mxy = max(b.y1, b.y2);
+  int mnx = min(b.x1, b.x2);
+  int mxx = max(b.x1, b.x2);
+
+  // 45 degree ray
+  int y = sy;
+  int x = sx;
+  if (mny == mxy) {  // horizontal case
+    int dy = mny - sy;
+    float testx = float((float)dy/200.0) + (float)sx;
+    if (testx <= mxx && testx >= mnx) return true;
+  }
+  if (mnx == mxx) {  // vertical line case
+    int dx = mnx - sx;
+    float testy = (dx*200) + sy;
+    if (testy <= mxy && testy >= mny) {
+      return true;
+    }
+  }
+  return false;
+}
+
 int main() {
   pair<int, int> start;
   ifstream strm(FNAME);
@@ -87,8 +112,8 @@ int main() {
   //  pair<int, int> cur = {128, 37};
   // pair<int, int> cur = {1, 2};
   // pair<int, int> cur = {2, 1};
-  // pair<int, int> cur = {1, 4};
-  pair<int, int> cur = {1, 2};
+  pair<int, int> cur = {1, 4};
+  // pair<int, int> cur = {1, 2};
 
   current_bounds.x1 = s;
   current_bounds.y1 = f;
@@ -97,7 +122,7 @@ int main() {
   in_path.insert(to_h(start));
 
   // char dir = 'R';
-  char dir = 'R';
+  char dir = 'D';
 
   cout << "start.first " << start.first << endl;
   cout << "start.second " << start.second << endl;
@@ -186,17 +211,12 @@ int main() {
       int iv = 0;
       int ih = 0;
       for (Bounds b : edges) {
-        if (intersectsV(i, j, b)) iv++;
+        if (intersects(i, j, b, height, width)) intersections++;
 
-        if (intersectsH(i, j, b)) ih++;
         //  if (i == 2 && j == 2) cout << "intersection with " << b.y1 << " ,
         //  " << b.y2 << " , " << b.x1 << " , " << b.x2 << endl;
       }
-      if (i == 6 && j == 2) {
-        cout << "intersections v for 6,2 " << iv << endl;
-        cout << "intersections h for 6,2 " << ih << endl;
-      }
-      if (iv % 2 == 1 && ih % 2 == 1) {
+      if (intersections % 2 == 1) {
         cout << "bounded found at " << i << " , " << j << endl;
         boundeds++;
       }
