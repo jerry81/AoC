@@ -30,6 +30,7 @@ vector<string> split_by(string s, char c) {
 
 // could do dp if needed
 int r(vector<int> rem, string &seq, int idx, char prev) {
+  cout << "idx is " << idx << endl;
   if (idx < 0) return (rem.empty() || rem[0] == 0);
 
   char cur_c = seq[idx];
@@ -64,7 +65,9 @@ int r(vector<int> rem, string &seq, int idx, char prev) {
           can_use_op = false;
         }
       }
-      if (!rem.empty()) rem.pop_back();
+      if (!rem.empty() && rem.back() == 0) {
+        rem.pop_back();
+      }
       bool can_use_brk = true;
 
       if (rem2.empty()) {
@@ -88,6 +91,7 @@ int main() {
   vector<string> lines = read_lines_into_vec();
   long long int res = 0;
   for (string l : lines) {
+    cout << "working on " << l << endl;
     vector<string> splBySpace = split_by(l, ' ');
     string layout = splBySpace[0];
     string grouping = splBySpace[1];
