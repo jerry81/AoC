@@ -19,12 +19,12 @@ vector<string> read_lines_into_vec() {
 }
 
 
-vector<string> split_by_space(string s) {
+vector<string> split_by(string s, char c) {
   vector<string> newTokens;
-  istringstream spaceStream(s);
-  string spaceToken;
-  while (spaceStream >> spaceToken) {
-    newTokens.push_back(spaceToken);
+  istringstream strm(s);
+  string tk;
+  while (getline(strm, tk, c)) {
+    newTokens.push_back(tk);
   }
   return newTokens;
 }
@@ -32,10 +32,10 @@ vector<string> split_by_space(string s) {
 int main() {
   vector<string> lines = read_lines_into_vec();
   for (string l: lines) {
-    vector<string> splBySpace = split_by_space(l);
+    vector<string> splBySpace = split_by(l, ' ');
     string layout = splBySpace[0];
     string grouping = splBySpace[1];
-    cout << "grouping is " << grouping << endl;
+    vector<string> splByComma = split_by(grouping, ',');
   }
   // split lines
   return 0;
