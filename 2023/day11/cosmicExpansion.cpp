@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 string to_h(int y, int x) { return to_string(y) + "," + to_string(x); }
 
@@ -68,7 +68,7 @@ int main() {
   vector<pair<int, int>> items;
   for (int r = 0; r < expanded.size(); ++r) {
     string row = expanded[r];
-    cout << row << endl;
+    // cout << row << endl;
     for (int c = 0; c < row.size(); ++c) {
       if (row[c] == '#') {
         items.push_back({r, c});
@@ -87,16 +87,16 @@ int main() {
     pair<int, int> point1 = items[i];
     auto [y1, x1] = point1;
     for (int j = i + 1; j < items.size(); ++j) {
-      cout << i << " to " << j << endl;
+      // cout << i << " to " << j << endl;
 
       pair<int, int> point2 = items[j];
       auto [y2, x2] = point2;
-      cout << y1 << "," << x1 << endl;
-      cout << " to " << endl;
-      cout << y2 << "," << x2 << endl;
+      // cout << y1 << "," << x1 << endl;
+      // cout << " to " << endl;
+      // cout << y2 << "," << x2 << endl;
       count++;
       int dist = abs(y2 - y1) + abs(x2 - x1);
-      cout << "dist is " << dist << endl;
+      // cout << "dist is " << dist << endl;
       totalDists += dist;
     }
   }
