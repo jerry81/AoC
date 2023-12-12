@@ -33,7 +33,7 @@ unordered_map<char, pair<int, int>> MOVES = {
     {'L', {0, -1}}   // L
 };
 
-bool intersects(int sy, int sx, Bounds b) {
+bool intersectsH(int sy, int sx, Bounds b) {
   // just horizontal line, increasing x
   int mny = min(b.y1, b.y2);
   int mxy = max(b.y1, b.y2);
@@ -44,6 +44,21 @@ bool intersects(int sy, int sx, Bounds b) {
   if (sy < mny) return false;
   if (sy > mxy) return false;
   if (sx > mxx) return false;
+
+  return true;
+}
+
+bool intersectsV(int sy, int sx, Bounds b) {
+  // just vertical line, increasing y
+  int mny = min(b.y1, b.y2);
+  int mxy = max(b.y1, b.y2);
+  int mnx = min(b.x1, b.x2);
+  int mxx = max(b.x1, b.x2);
+  if (mnx == mxx) return false;
+
+  if (sx < mnx) return false;
+  if (sx > mxx) return false;
+  if (sy > mxy) return false;
 
   return true;
 }
@@ -73,7 +88,7 @@ int main() {
   // pair<int, int> cur = {1, 2};
   // pair<int, int> cur = {2, 1};
   // pair<int, int> cur = {1, 4};
-  pair<int, int> cur = {1,2};
+  pair<int, int> cur = {1, 2};
 
   current_bounds.x1 = s;
   current_bounds.y1 = f;
@@ -82,7 +97,7 @@ int main() {
   in_path.insert(to_h(start));
 
   // char dir = 'R';
-    char dir = 'R';
+  char dir = 'R';
 
   cout << "start.first " << start.first << endl;
   cout << "start.second " << start.second << endl;
@@ -168,14 +183,20 @@ int main() {
     for (int j = 0; j < width; ++j) {
       if (in_path.find(to_h({i, j})) != in_path.end()) continue;
       int intersections = 0;
+      int iv = 0;
+      int ih = 0;
       for (Bounds b : edges) {
-        if (intersects(i, j, b)) {
-          //  if (i == 2 && j == 2) cout << "intersection with " << b.y1 << " ,
-          //  " << b.y2 << " , " << b.x1 << " , " << b.x2 << endl;
-          intersections++;
-        }
+        if (intersectsV(i, j, b)) iv++;
+
+        if (intersectsH(i, j, b)) ih++;
+        //  if (i == 2 && j == 2) cout << "intersection with " << b.y1 << " ,
+        //  " << b.y2 << " , " << b.x1 << " , " << b.x2 << endl;
       }
-      if (intersections % 2 == 1) {
+      if (i == 6 && j == 2) {
+        cout << "intersections v for 6,2 " << iv << endl;
+        cout << "intersections h for 6,2 " << ih << endl;
+      }
+      if (iv % 2 == 1 && ih % 2 == 1) {
         cout << "bounded found at " << i << " , " << j << endl;
         boundeds++;
       }
