@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "isolated.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -30,46 +30,58 @@ vector<string> split_by(string s, char c) {
 
 // could do dp if needed
 int r(vector<int> rem, string &seq, int idx, char prev) {
-  if (idx < 0) {
+  if (idx < 0) return (rem.empty() || rem[0] == 0);
 
-    int val= rem.empty() ? 1 : 0;
-    return val;
-  }
   char cur_c = seq[idx];
-  if (rem.empty()) {
-    if (cur_c == '#') return 0;
-    return r({}, seq, idx-1, cur_c);
-  }
-  int crem = rem.back();
-  if (crem == 0) {
-    if (cur_c != '#') {
-      rem.pop_back();
-      return r(rem, seq, idx-1, '.');
-    } else {
-      return 0;
-    }
-  }
 
-  if (cur_c == '#') {
-    rem[rem.size() - 1]--;
-    return r(rem, seq, idx-1, '#');
-  } else if (cur_c == '.') {
-    if (prev == '#') {
-      if (crem != 0) {
-        return 0;
-      }
+  switch (cur_c) {
+    case '#': {
+      if (rem.empty()) return 0;
+
+      if (rem.back() <= 0) return 0;
+
+      rem[rem.size() - 1]--;
+      return r(rem, seq, idx - 1, '#');
     }
-    return r(rem, seq, idx-1, '.');
-  } else { // ? case
-    vector<int> rem2 = rem;
-    rem2[rem2.size()-1]--;
-    return r(rem, seq, idx-1, '.') + r(rem2,seq,idx-1,'#');
+    case '.': {
+      if (!rem.empty() && prev == '#') {
+        if (rem.back() != 0) return 0;
+
+        rem.pop_back();
+      }
+
+      return r(rem, seq, idx - 1, '.');
+    }
+    default: {
+      // can choose
+      int sum = 0;
+      vector<int> rem2 = rem;
+      bool can_use_op = true; // '.'
+      if (prev == '#') {
+        if (rem.empty()) {
+          can_use_op = false;
+        } else if (rem.back() != 0) {
+          can_use_op = false;
+        }
+      }
+      if (!rem.empty()) rem.pop_back();
+      bool can_use_brk = true;
+
+      if (rem2.empty()) {
+        can_use_brk = false;
+      } else if (rem2.back() <= 0) {
+        can_use_brk = false;
+      }
+
+      rem2[rem2.size()-1]--;
+
+      if (can_use_op) sum+=r(rem, seq,idx-1, '.');
+
+      if (can_use_brk) sum+=r(rem2, seq, idx-1, '#');
+      return sum;
+    }
+      return 0;
   }
-  cout << "idx is " << idx << endl;
-  cout << "prev is " << prev << endl;
-  cout << "cur_c is " << cur_c << endl;
-  cout << "funneled here " << endl;
-  return 0;
 }
 
 int main() {
@@ -81,13 +93,13 @@ int main() {
     string grouping = splBySpace[1];
     vector<string> splByComma = split_by(grouping, ',');
     vector<int> ivals;
-    for (string s: splByComma) ivals.push_back(stoi(s));
-    if (layout == "?###????????") {
-      cout << "examining " << endl;
-      int example = r(ivals, layout, layout.size()-1, ' ');
-      cout << "out is " << example << endl;
-    }
-    res+= r(ivals, layout, layout.size()-1, ' ');
+    for (string s : splByComma) ivals.push_back(stoi(s));
+    // if (layout == "?###????????") {
+    //   cout << "examining " << endl;
+    //   int example = r(ivals, layout, layout.size()-1, ' ');
+    //   cout << "out is " << example << endl;
+    // }
+    res += r(ivals, layout, layout.size() - 1, '.');
   }
   cout << "res is " << res << endl;
   // split lines
