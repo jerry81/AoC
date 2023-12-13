@@ -1,7 +1,7 @@
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
 
 using namespace std;
 
@@ -21,7 +21,7 @@ int main() {
   vector<string> all_lines = read_lines_into_vec();
   vector<vector<string>> grids;
   vector<string> cur_grid;
-  for (string s: all_lines) {
+  for (string s : all_lines) {
     if (s.find('#') == string::npos && s.find('.') == string::npos) {
       grids.push_back(cur_grid);
       cur_grid.clear();
@@ -30,10 +30,26 @@ int main() {
     }
   }
   grids.push_back(cur_grid);
-  for (auto a: grids) {
-    cout << "printing grid " << endl;
-    for (auto b:a) {
-      cout << b << endl;
+  for (auto a : grids) {
+    vector<int> nextcandidates;
+    for (auto b : a) {
+      // line of a grid
+      int len = b.size();
+      if (nextcandidates.empty()) {
+        for (int i = 0; i < len - 1; ++i) {
+          char c = b[i];
+          char d = b[i + 1];
+          if (c == d) {
+            nextcandidates.push_back(i);
+          }
+        }
+      } else {
+        vector<int> nextnextcandds;
+        for (int i: nextcandidates) {
+          if (b[i] == b[i+1]) nextnextcandds.push_back(i);
+        }
+      }
+      if (nextcandidates.size() == 1) cout << "split point found at " << nextcandidates[0] << endl;
     }
   }
   return 0;
