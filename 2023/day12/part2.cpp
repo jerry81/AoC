@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <map>
 #include <vector>
 
 using namespace std;
@@ -33,36 +34,63 @@ string unfold(string inp, bool grouping = false) {
   string seperator = grouping ? "," : "?";
   for (int i = 0; i < 5; ++i) {
     ret += inp;
-    ret+=seperator;
+    ret += seperator;
   }
   ret.pop_back();
   return ret;
 }
 
+map<tuple<int,int,int,char>, long long int> memo;
+
 // could do dp if needed
-int r(vector<int> rem, string &seq, int idx, char prev) {
-  if (idx < 0) return (rem.empty() || (!rem.empty() && rem[0] == 0));
+long long int r(vector<int> rem, string &seq, int idx, char prev) {
+  int sz = rem.size();
+  int bk = rem.empty() ? -1: rem.back();
+  //  cout << "hsh is " << hsh << endl;
+
+  if (idx < 0) {
+    // return rem.empty() || (!rem.empty() && rem[0] == 0);
+    return (rem.empty() || (!rem.empty() && rem[0] == 0)) ? 1 : 0;
+  }
+
+
+  const tuple<int,int,int,char> hsh = tuple(sz, idx, bk, prev);
+  if (memo.find(hsh) != memo.cend()) return memo[hsh];
+
 
   char cur_c = seq[idx];
 
   switch (cur_c) {
     case '#': {
-      if (rem.empty()) return 0;
+      if (rem.empty()) {
+        memo[hsh] = 0;
+        return 0;
+      }
 
-      if (!rem.empty() && rem.back() <= 0) return 0;
+      if (!rem.empty() && rem.back() <= 0) {
+        memo[hsh] = 0;
+        return 0;
+      }
 
       rem[rem.size() - 1]--;
+
       return r(rem, seq, idx - 1, '#');
+    //  memo[hsh] = r(rem, seq, idx - 1, '#');
+    //  return memo[hsh];
     }
     case '.': {
       if (!rem.empty() && prev == '#') {
-        if (rem.back() != 0) return 0;
+        if (rem.back() != 0) {
+          memo[hsh] = 0;
+          return 0;
+        }
 
         rem.pop_back();
-        ;
       }
-
+      // if (memo.find(curhsh2) != memo.end()) return memo[curhsh2];
       return r(rem, seq, idx - 1, '.');
+      //  memo[hsh] = r(rem, seq, idx - 1, '.');
+      //  return memo[hsh];
     }
     default: {
       // can choose
@@ -89,9 +117,31 @@ int r(vector<int> rem, string &seq, int idx, char prev) {
         rem2[rem2.size() - 1]--;
       }
 
-      if (can_use_op) sum += r(rem, seq, idx - 1, '.');
+      if (can_use_op) {
+        // string curhsh = h(rem, idx - 1, '.');
 
-      if (can_use_brk) sum += r(rem2, seq, idx - 1, '#');
+        // // if (memo.find(curhsh) != memo.end()) {
+        //   sum += memo[curhsh];
+        // } else {
+          sum += r(rem, seq, idx - 1, '.');
+        // }
+      }
+
+      if (can_use_brk) {
+        // string hsh3 = h(rem2, idx-1, '#');
+        // memo[hsh3] =  r(rem2, seq, idx - 1, '#');
+        // sum+= memo[hsh3];
+        // string curhsh = h(rem2, idx - 1, '#');
+        // if (memo.find(curhsh) != memo.end()) {
+        //   sum += memo[curhsh];
+        // } else {
+          sum += r(rem2, seq, idx - 1, '#');
+        // }
+      }
+
+    //  if (sum == 0) memo[hsh] = 0;
+      // memo[hsh] = sum;
+      // return sum;
       return sum;
     }
       return 0;
