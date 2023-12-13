@@ -38,8 +38,8 @@ long long int horizontalCheck(vector<string> lines) {
       nextcandidates = nextnextcandds;
     }
   }
-   if (nextcandidates.size() == 1) return nextcandidates[0];
-    return -1;
+  if (nextcandidates.size() == 1) return nextcandidates[0];
+  return -1;
 }
 
 long long int verticalCheck(vector<string> lines) {
@@ -50,13 +50,12 @@ long long int verticalCheck(vector<string> lines) {
   for (int i = 0; i < wd; ++i) {
     if (nextcandidates.empty()) {
       for (int j = 0; j < ht - 1; ++j) {
-        if (lines[j][i] == lines[j+1][i]) nextcandidates.push_back(j);
+        if (lines[j][i] == lines[j + 1][i]) nextcandidates.push_back(j);
       }
     } else {
       vector<int> nxtnxt;
-      for (int j: nextcandidates) {
-        if (lines[j][i] == lines[j+1][i]) nxtnxt.push_back(j);
-
+      for (int j : nextcandidates) {
+        if (lines[j][i] == lines[j + 1][i]) nxtnxt.push_back(j);
       }
       nextcandidates = nxtnxt;
     }
@@ -64,7 +63,6 @@ long long int verticalCheck(vector<string> lines) {
   if (nextcandidates.size() == 1) return nextcandidates[0];
   return -1;
 }
-
 
 int main() {
   vector<string> all_lines = read_lines_into_vec();
@@ -84,16 +82,18 @@ int main() {
     long long int sum = 0;
     int hres = horizontalCheck(a);
     cout << "hres " << hres << endl;
-        int vres = verticalCheck(a);
-    if (hres >=0)  {
-      sum+= 100*hres;
+
+    int vres = verticalCheck(a);
+    cout << " and vres is " << vres << endl;
+    if (hres >= 0) {
+      sum += 100 * hres;
     } else {
-    sum+= vres;
+      sum += vres;
     }
 
     // if (vres >= 0) sum+= vres;
     cout << "sum is " << sum << endl;
-    res+= sum;
+    res += sum;
   }
   cout << "res is " << res << endl;
   return 0;
