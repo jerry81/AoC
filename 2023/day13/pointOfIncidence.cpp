@@ -50,17 +50,15 @@ long long int verticalCheck(vector<string> lines) {
   for (int i = 0; i < wd; ++i) {
     if (nextcandidates.empty()) {
       for (int j = 0; j < ht - 1; ++j) {
-        if (lines[j][i] == lines[j+1][i]) {
-          nextcandidates.push_back(j);
-        }
+        if (lines[j][i] == lines[j+1][i]) nextcandidates.push_back(j);
       }
     } else {
       vector<int> nxtnxt;
       for (int j: nextcandidates) {
         if (lines[j][i] == lines[j+1][i]) nxtnxt.push_back(j);
 
-        nextcandidates = nxtnxt;
       }
+      nextcandidates = nxtnxt;
     }
   }
   if (nextcandidates.size() == 1) return nextcandidates[0];
@@ -85,9 +83,15 @@ int main() {
   for (auto a : grids) {
     long long int sum = 0;
     int hres = horizontalCheck(a);
-    if (hres >=0) sum+= 100*hres;
-    int vres = verticalCheck(a);
-    if (vres >= 0) sum+= vres;
+    cout << "hres " << hres << endl;
+        int vres = verticalCheck(a);
+    if (hres >=0)  {
+      sum+= 100*hres;
+    } else {
+    sum+= vres;
+    }
+
+    // if (vres >= 0) sum+= vres;
     cout << "sum is " << sum << endl;
     res+= sum;
   }
