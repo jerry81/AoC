@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const string FNAME = "isolated.txt";
+const string FNAME = "sm.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -30,16 +30,18 @@ vector<string> split_by(string s, char c) {
 
 // could do dp if needed
 int r(vector<int> rem, string &seq, int idx, char prev) {
-  cout << "idx is " << idx << endl;
-  if (idx < 0) return (rem.empty() || rem[0] == 0);
+  if (idx < 0) return (rem.empty() || (!rem.empty() && rem[0] == 0));
+
 
   char cur_c = seq[idx];
+
+
 
   switch (cur_c) {
     case '#': {
       if (rem.empty()) return 0;
 
-      if (rem.back() <= 0) return 0;
+      if (!rem.empty() && rem.back() <= 0) return 0;
 
       rem[rem.size() - 1]--;
       return r(rem, seq, idx - 1, '#');
@@ -48,7 +50,7 @@ int r(vector<int> rem, string &seq, int idx, char prev) {
       if (!rem.empty() && prev == '#') {
         if (rem.back() != 0) return 0;
 
-        rem.pop_back();
+        rem.pop_back();;
       }
 
       return r(rem, seq, idx - 1, '.');
@@ -72,11 +74,12 @@ int r(vector<int> rem, string &seq, int idx, char prev) {
 
       if (rem2.empty()) {
         can_use_brk = false;
-      } else if (rem2.back() <= 0) {
-        can_use_brk = false;
+      } else {
+        if (rem2.back() <= 0)  can_use_brk = false;
+
+        rem2[rem2.size()-1]--;
       }
 
-      rem2[rem2.size()-1]--;
 
       if (can_use_op) sum+=r(rem, seq,idx-1, '.');
 
@@ -91,7 +94,6 @@ int main() {
   vector<string> lines = read_lines_into_vec();
   long long int res = 0;
   for (string l : lines) {
-    cout << "working on " << l << endl;
     vector<string> splBySpace = split_by(l, ' ');
     string layout = splBySpace[0];
     string grouping = splBySpace[1];
