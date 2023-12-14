@@ -21,6 +21,12 @@ bool checkline(string s, int start) {
   int sz = s.size();
   int offset = 0;
   while ((offset + start + 1) < sz && (start - offset) >= 0) {
+    if (start == 2) {
+      cout << "comparing " << start - offset << " to " << start + 1 + offset
+           << endl;
+      cout << "comparingv " << s[start - offset] << " to "
+           << s[start + 1 + offset] << endl;
+    }
     if (s[start - offset] != s[start + 1 + offset]) return false;
 
     offset++;
@@ -33,17 +39,20 @@ int horizontalCheck(vector<string> lines) {
   int sz = lines[0].size();
   vector<int> cands;
   for (auto b : lines) {
+    cout << "cands is now " << endl;
+    for (auto a : cands) cout << a << endl;
     // line of a grid
     vector<int> nxt;
     if (cands.empty()) {
-      for (int i = 0; i < sz-1; ++i) {
+      for (int i = 0; i < sz - 1; ++i) {
         if (checkline(b, i)) nxt.push_back(i);
       }
     } else {
-      for (int i: cands) {
-        if (checkline(b,i)) nxt.push_back(i);
+      for (int i : cands) {
+        if (checkline(b, i)) nxt.push_back(i);
       }
     }
+    if (nxt.empty()) return false;
     cands = nxt;
   }
 
@@ -58,8 +67,12 @@ int verticalCheck(vector<string> lines) {
   vector<string> newLines(w, "");
   for (int c = 0; c < w; ++c) {
     for (int r = 0; r < h; ++r) {
-        newLines[c].push_back(lines[r][c]);
+      newLines[c].push_back(lines[r][c]);
     }
+  }
+  cout << "flipped " << endl;
+  for (string s : newLines) {
+    cout << s << endl;
   }
   return horizontalCheck(newLines);
 }
@@ -77,7 +90,7 @@ int main() {
     }
   }
   grids.push_back(cur_grid);
-  long long int res;
+  long long int res = 0;
   for (auto a : grids) {
     long long int sum = 0;
     int hres = horizontalCheck(a) + 1;  // hres to left
@@ -85,9 +98,12 @@ int main() {
     cout << "hres is " << hres << endl;
 
     int vres = verticalCheck(a) + 1;
-    if (hres > 0) {
+
+    cout << "vres is " << vres << endl;
+    if (hres > 1) {
       sum += hres;
-    } else {
+    }
+    if (vres > 1) {
       sum += vres * 100;
     }
 
