@@ -5,7 +5,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -43,9 +43,25 @@ vector<string> trickle_up(vector<string> orig) {
   return ret;
 }
 
+int tally(vector<string> items) {
+  int res = 0;
+  int rank = 1;
+  reverse(items.begin(), items.end());
+  for (string s: items) {
+    int count = 0;
+    for (char c: s) {
+      if (c == 'O') count++;
+    }
+    res+=count*rank;
+    rank++;
+  }
+  return res;
+}
+
 int main() {
   vector<string> lines = read_lines_into_vec();
   vector<string> transformed = trickle_up(lines);
-  cout << "checking " << endl;
-  for (string s : transformed) cout << s << endl;
+  // cout << "checking " << endl;
+  // for (string s : transformed) cout << s << endl;
+  cout << tally(transformed) << endl;
 }
