@@ -5,7 +5,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -21,12 +21,12 @@ bool checkline(string s, int start) {
   int sz = s.size();
   int offset = 0;
   while ((offset + start + 1) < sz && (start - offset) >= 0) {
-    if (start == 2) {
-      cout << "comparing " << start - offset << " to " << start + 1 + offset
-           << endl;
-      cout << "comparingv " << s[start - offset] << " to "
-           << s[start + 1 + offset] << endl;
-    }
+    // if (start == 2) {
+    //   cout << "comparing " << start - offset << " to " << start + 1 + offset
+    //        << endl;
+    //   cout << "comparingv " << s[start - offset] << " to "
+    //        << s[start + 1 + offset] << endl;
+    // }
     if (s[start - offset] != s[start + 1 + offset]) return false;
 
     offset++;
@@ -39,8 +39,8 @@ int horizontalCheck(vector<string> lines) {
   int sz = lines[0].size();
   vector<int> cands;
   for (auto b : lines) {
-    cout << "cands is now " << endl;
-    for (auto a : cands) cout << a << endl;
+    // cout << "cands is now " << endl;
+    // for (auto a : cands) cout << a << endl;
     // line of a grid
     vector<int> nxt;
     if (cands.empty()) {
@@ -52,12 +52,12 @@ int horizontalCheck(vector<string> lines) {
         if (checkline(b, i)) nxt.push_back(i);
       }
     }
-    if (nxt.empty()) return false;
+    if (nxt.empty()) return -10;
     cands = nxt;
   }
 
   if (cands.size() == 1) return cands[0];
-  return -1;
+  return -10;
 }
 
 int verticalCheck(vector<string> lines) {
@@ -70,10 +70,10 @@ int verticalCheck(vector<string> lines) {
       newLines[c].push_back(lines[r][c]);
     }
   }
-  cout << "flipped " << endl;
-  for (string s : newLines) {
-    cout << s << endl;
-  }
+  // cout << "flipped " << endl;
+  // for (string s : newLines) {
+  //   cout << s << endl;
+  // }
   return horizontalCheck(newLines);
 }
 
@@ -100,10 +100,10 @@ int main() {
     int vres = verticalCheck(a) + 1;
 
     cout << "vres is " << vres << endl;
-    if (hres > 1) {
+    if (hres > 0) {
       sum += hres;
     }
-    if (vres > 1) {
+    if (vres > 0) {
       sum += vres * 100;
     }
 
