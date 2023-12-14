@@ -17,51 +17,51 @@ vector<string> read_lines_into_vec() {
   return lines;
 }
 
-long long int horizontalCheck(vector<string> lines) {
-  vector<int> nextcandidates;
+bool checkline(string s, int start) {
+  int sz = s.size();
+  int offset = 0;
+  while ((offset + start + 1) < sz && (start - offset) >= 0) {
+    if (s[start - offset] != s[start + 1 + offset]) return false;
+
+    offset++;
+  }
+  return true;
+}
+
+int horizontalCheck(vector<string> lines) {
+  // check all checkable items
+  int sz = lines[0].size();
+  vector<int> cands;
   for (auto b : lines) {
     // line of a grid
-    int len = b.size();
-    if (nextcandidates.empty()) {
-      for (int i = 0; i < len - 1; ++i) {
-        char c = b[i];
-        char d = b[i + 1];
-        if (c == d) {
-          nextcandidates.push_back(i);
-        }
+    vector<int> nxt;
+    if (cands.empty()) {
+      for (int i = 0; i < sz-1; ++i) {
+        if (checkline(b, i)) nxt.push_back(i);
       }
     } else {
-      vector<int> nextnextcandds;
-      for (int i : nextcandidates) {
-        if (b[i] == b[i + 1]) nextnextcandds.push_back(i);
+      for (int i: cands) {
+        if (checkline(b,i)) nxt.push_back(i);
       }
-      nextcandidates = nextnextcandds;
     }
+    cands = nxt;
   }
-  if (nextcandidates.size() == 1) return nextcandidates[0];
+
+  if (cands.size() == 1) return cands[0];
   return -1;
 }
 
-long long int verticalCheck(vector<string> lines) {
-  vector<int> nextcandidates;
-  int ht = lines.size();
-  // line of a grid
-  int wd = lines[0].size();
-  for (int i = 0; i < wd; ++i) {
-    if (nextcandidates.empty()) {
-      for (int j = 0; j < ht - 1; ++j) {
-        if (lines[j][i] == lines[j + 1][i]) nextcandidates.push_back(j);
-      }
-    } else {
-      vector<int> nxtnxt;
-      for (int j : nextcandidates) {
-        if (lines[j][i] == lines[j + 1][i]) nxtnxt.push_back(j);
-      }
-      nextcandidates = nxtnxt;
+int verticalCheck(vector<string> lines) {
+  // convert vertical lines to horizontal lines
+  int w = lines[0].size();
+  int h = lines.size();
+  vector<string> newLines(w, "");
+  for (int c = 0; c < w; ++c) {
+    for (int r = 0; r < h; ++r) {
+        newLines[c].push_back(lines[r][c]);
     }
   }
-  if (nextcandidates.size() == 1) return nextcandidates[0];
-  return -1;
+  return horizontalCheck(newLines);
 }
 
 int main() {
@@ -80,15 +80,15 @@ int main() {
   long long int res;
   for (auto a : grids) {
     long long int sum = 0;
-    int hres = horizontalCheck(a);
-    cout << "hres " << hres << endl;
+    int hres = horizontalCheck(a) + 1;  // hres to left
 
-    int vres = verticalCheck(a);
-    cout << " and vres is " << vres << endl;
-    if (hres >= 0) {
-      sum += 100 * hres;
+    cout << "hres is " << hres << endl;
+
+    int vres = verticalCheck(a) + 1;
+    if (hres > 0) {
+      sum += hres;
     } else {
-      sum += vres;
+      sum += vres * 100;
     }
 
     // if (vres >= 0) sum+= vres;
