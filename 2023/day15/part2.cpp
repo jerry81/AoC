@@ -54,7 +54,15 @@ int main() {
     if (tk.find('-') != string::npos) {
       k = split_by(tk, '-')[0];
       int h = hsh_s(k);
-      cout << "removing " << k << " from position " << h << endl;
+      auto cur_slot = slots[h];
+      for (int idx = 0; idx < cur_slot.size(); ++idx) {
+        auto [ks, _] = cur_slot[idx];
+        if (ks == k) {
+          cur_slot.erase(cur_slot.begin()+idx);
+          slots[h] = cur_slot;
+          break;
+        }
+      }
     } else {
       auto ve = split_by(tk, '=');
       k = ve[0];
@@ -80,11 +88,14 @@ int main() {
       }
     }
   }
+  int res = 0;
   for (int i = 0; i < slots.size(); ++i) {
-    cout << "slot " << i << endl;
     auto v = slots[i];
+    int ct = 1;
+
     for (auto [k,v2]: v) {
-      cout << k << ":"<<v2 << endl;
+      sum+=(i+1)*ct*v2;
+      ct++;
     }
   }
   cout << sum << endl;
