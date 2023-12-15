@@ -46,6 +46,8 @@ int main() {
   string s = read_lines_into_vec()[0];
   vector<string> tks = split_by(s,',');
   int sum = 0;
+  vector<vector<tuple<string, int>>> slots(256);
+
   for (auto tk: tks) {
     string k;
     string v;
@@ -58,11 +60,33 @@ int main() {
       k = ve[0];
       v = ve[1];
       int h = hsh_s(k);
-      cout << "eq situation " << endl;
-      cout << "assinging " << stoi(v) <<  " into position " << h << "," << k << endl;
+      int vi = stoi(v);
+      auto cur_slot = slots[h];
+      auto new_t = make_tuple(k, vi);
+
+      bool found = false;
+      for (int idx = 0; idx < cur_slot.size(); ++idx) {
+        auto [ks, _] = cur_slot[idx];
+        if (ks == k) {
+          cur_slot[idx] = new_t;
+          found = true;
+          break;
+        }
+      }
+      if (found) {
+        slots[h] = cur_slot;
+      } else {
+        slots[h].push_back(new_t);
+      }
     }
   }
-  vector<vector<tuple<string, int>>> slots(256);
+  for (int i = 0; i < slots.size(); ++i) {
+    cout << "slot " << i << endl;
+    auto v = slots[i];
+    for (auto [k,v2]: v) {
+      cout << k << ":"<<v2 << endl;
+    }
+  }
   cout << sum << endl;
   return 0;
 }
