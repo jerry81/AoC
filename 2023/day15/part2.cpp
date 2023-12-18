@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
