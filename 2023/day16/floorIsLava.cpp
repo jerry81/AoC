@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -29,12 +29,11 @@ int main() {
   while (!current_beams.empty()) {
     vector<tuple<int, int, int>> nxt_beams;
     for (auto [y, x, dir] : current_beams) {
-      if (visited.find({y, x, dir}) == visited.end()) continue;
+      if (visited.find({y, x, dir}) != visited.end()) continue;
 
       visited.insert({y, x, dir});
       char cur = lines[y][x];
-      int nx = x;
-      int ny = y;
+
       vector<int> nxt_dirs;
       switch (cur) {
         case '.': {
@@ -100,28 +99,42 @@ int main() {
           break;
         }
       }
-      switch (dir) {
-        case 0: {
-          nx--;
-          break;
+      for (int d : nxt_dirs) {
+        int nx = x;
+        int ny = y;
+        switch (d) {
+          case 0: {
+            nx--;
+            break;
+          }
+          case 1: {
+            ny--;
+            break;
+          }
+          case 2: {
+            nx++;
+            break;
+          }
+          default: {
+            ny++;
+          }
         }
-        case 1: {
-          ny--;
-          break;
-        }
-        case 2: {
-          nx++;
-          break;
-        }
-        default: {
-          ny++;
-        }
-      }
-      if (nx < 0 || ny < 0) continue;
 
-      if (ny >= h || nx >= w) continue;
+        if (nx < 0 || ny < 0) continue;
+
+        if (ny >= h || nx >= w) continue;
+
+        nxt_beams.push_back({ny,nx,d});
+      }
+
     }
+     current_beams = nxt_beams;
   }
+  set<tuple<int,int>> counted;
+  for (auto [a,b,_]: visited) {
+    counted.insert({a,b});
+  }
+  cout << "res is " << counted.size() << endl;
   return 0;
 }
 
