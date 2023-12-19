@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -148,7 +148,6 @@ int main() {
     res = max(res, get_count({i,0,2}, lines, h, w));
     res = max(res, get_count({i,w-1,0}, lines, h, w));
   }
-
 
   cout << "res is " << res << endl;
   return 0;
