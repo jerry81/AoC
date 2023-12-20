@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt"; // NORMALIZATION needed
+const string FNAME = "input.txt"; // NORMALIZATION needed
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -102,15 +102,21 @@ int main() {
     cout << "sum so far is " << sum << endl;
 
   for (auto v: grid) {
+    string str(v.begin(),v.end());
+    cout << str << endl;
     bool count = false;
     bool can_off = false;
+    int cursum = 0;
     for (char c: v) {
+
       if (count) {
         if (c == '.') {
-          sum++;
+          cursum++;
           can_off = true;
         } else {
           if (can_off) {
+            sum+=cursum;
+            cursum = 0;
             count = false;
             can_off = false;
           }
@@ -131,3 +137,7 @@ int main() {
 // get bounds of the
 // first milestone:  print out the input map
 // fill logic:
+
+// 54914 too high
+// after accounting for not counting periods to the right of an unbounded #
+// 45683 too low
