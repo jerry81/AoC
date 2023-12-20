@@ -117,3 +117,8 @@ new dir+2%4 != dir
 - minimal change to make bfs into djikstra: pq instead of queue!
 
 - PART 2
+- genius just had to change the conditional
+
+- explanation - general idea for pathfinding is djikstra's.
+
+- recommends codejam
