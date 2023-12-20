@@ -49,3 +49,24 @@ This path never moves more than three consecutive blocks in the same direction a
 
 Directing the crucible from the lava pool to the machine parts factory, but not moving more than three consecutive blocks in the same direction, what is the least heat loss it can incur?
 
+
+## johnathan paulson
+
+- does a bfs and it worked fast
+- did not revisite nodes (visited)
+- nodes have 5 params, y,x,cost,dir,consecutive
+- changes to pq (djikstra)
+- thinks and debugs quickly!!
+- very cool python trick
+```python
+  for i,(dr,dc) in enumerate([[-1,0], [0,1], [1,0], [0,-1]]):
+```
+- direction already enumerated (i)
+- starts with a single start node (-1 direction)
+- 5 params - dist,y,x,dir,indir (consecutive)
+```
+new dir+2%4 != dir
+```
+- this seems to take care of the no moving backwards rule
+
+- minimal change to make bfs into djikstra: pq instead of queue!
