@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const string FNAME = "input.txt"; // NORMALIZATION needed
+const string FNAME = "sm.txt"; // NORMALIZATION needed
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -29,6 +29,7 @@ vector<string> split_by(string s, char c) {
 }
 
 int main() {
+  int sum = 0;
   vector<string> lines = read_lines_into_vec();
   pair<int, int> pt = {0, 0};
   pair<int, int> maxes = {0, 0};
@@ -38,6 +39,7 @@ int main() {
     vector<string> tokens = split_by(line, ' ');
     string d = tokens[0];
     int mag = stoi(tokens[1]);
+    sum+=mag;
     int dy = 0;
     int dx = 0;
     if (d == "U") {
@@ -97,12 +99,35 @@ int main() {
     }
     pt = {ny,nx};
   }
+    cout << "sum so far is " << sum << endl;
+
   for (auto v: grid) {
-    string str(v.begin(),v.end());
-    cout <<  str << endl;;
+    bool count = false;
+    bool can_off = false;
+    for (char c: v) {
+      if (count) {
+        if (c == '.') {
+          sum++;
+          can_off = true;
+        } else {
+          if (can_off) {
+            count = false;
+            can_off = false;
+          }
+        }
+      } else {
+        if (c == '#') {
+          count = true;
+          can_off = false;
+        }
+      }
+
+    }
   }
+  cout << "sum is now " << sum << endl;
 
   return 0;
 }
 // get bounds of the
 // first milestone:  print out the input map
+// fill logic:
