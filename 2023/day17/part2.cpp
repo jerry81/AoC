@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -38,7 +38,7 @@ int main() {
                  vector<tuple<int, int, int, int, int>>, TupleComparator>
       q;  // use the generics
           // the "type", the container impl, the custom comparator
-  q.push({0, 0, 0, -1, 0});
+  q.push({0, 0, 0, -1, -1});
   map<tuple<int, int, int, int>, int> visited;
 
   while (!q.empty()) {
@@ -85,10 +85,13 @@ int main() {
   }
   int res = 1e9;
   for (auto [k, v] : visited) {
-    auto [y, x, _, __] = k;
-    if (y == h - 1 && x == w - 1) res = min(res, v);
+    auto [y, x, _, cons] = k;
+    if (y == h - 1 && x == w - 1 && cons >= 4 && cons <= 10) res = min(res, v);
   }
   cout << "res is " << res << endl;
   // dfs?
   return 0;
 }
+
+// 1210 too high
+// 1173 too high

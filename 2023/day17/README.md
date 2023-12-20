@@ -115,3 +115,5 @@ new dir+2%4 != dir
 - this seems to take care of the no moving backwards rule
 
 - minimal change to make bfs into djikstra: pq instead of queue!
+
+- PART 2
