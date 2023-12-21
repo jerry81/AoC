@@ -53,12 +53,25 @@ void get_ranges(vector<string> instructions, int xmin, int xmax, int mmin,
     vector<string> spl_left = split_by(left, comparator);
     string s = spl_left[0];
     int compared_val = stoi(spl_left[1]);
-    if (s == "x") {
+    string right = spl_res[1];
+    if (s == "x") { // this can get messy.  use vector instead for params
+
+      // true case
+      if (comparator == '>') {
+        int newxmin = max(xmin, compared_val);
+        int newxmax = min(xmax, compared_val);
+        if (right == "A") {
+            get_ranges({"A"}, newxmin, xmax,mmin,mmax,amin,amax,smin,smax);
+        }
+        if (right != "R") { //
+            get_ranges(workflows[right], xmin, newxmax,mmin, mmax,amin,amax,smin,smax);
+        }
+      }
     } else if (s == "m") {
     } else if (s == "a") {
     } else {
     }
-    string right = spl_res[1];
+
     // update range for true case - go to right
     // is right R or A
     // if not then it is a key
