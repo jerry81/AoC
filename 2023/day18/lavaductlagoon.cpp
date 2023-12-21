@@ -27,7 +27,7 @@ vector<string> split_by(string s, char c) {
   }
   return newTokens;
 }
-
+// store points
 int main() {
   int sum = 0;
   vector<string> lines = read_lines_into_vec();
@@ -35,6 +35,7 @@ int main() {
   pair<int, int> maxes = {0, 0};
   pair<int,int> mins = {0,0};
   vector<vector<string>> instructions;
+
   for (auto line : lines) {
     vector<string> tokens = split_by(line, ' ');
     string d = tokens[0];
@@ -67,7 +68,9 @@ int main() {
   pair<int,int> start = {abs(mny), abs(mnx)};
   vector<vector<char>> grid(get<0>(normalized)+1, vector<char>(get<1>(normalized)+1, '.'));
   pt = start;
+  vector<pair<int,int>> points;
   for (auto instruction : instructions) {  // TODO: repetitive
+    points.push_back(pt);
     string d = instruction[0];
     int mag = stoi(instruction[1]);
     int dy = 0;
@@ -99,38 +102,61 @@ int main() {
     }
     pt = {ny,nx};
   }
-    cout << "sum so far is " << sum << endl;
+  int shoelacesum = 0;
+    for (int i = 0; i < points.size() - 1; ++i) {
+        auto [y1, x1] = points[i];
+        auto [y2, x2] = points[i + 1];
 
-  for (auto v: grid) {
-    string str(v.begin(),v.end());
-    cout << str << endl;
-    bool count = false;
-    bool can_off = false;
-    int cursum = 0;
-    for (char c: v) {
+        cout << "point 1 is " << y1 << "," << x1 << endl;
+        cout << "point 2 is " << y2 << "," << x2 << endl;
 
-      if (count) {
-        if (c == '.') {
-          cursum++;
-          can_off = true;
-        } else {
-          if (can_off) {
-            sum+=cursum;
-            cursum = 0;
-            count = false;
-            can_off = false;
-          }
-        }
-      } else {
-        if (c == '#') {
-          count = true;
-          can_off = false;
-        }
-      }
-
+        int determ = x1 * y2;
+        determ -= x2 * y1;
+        shoelacesum += determ;
     }
-  }
+
+    auto [y1, x1] = points.back();
+    auto [y2, x2] = points.front();
+    int determ = x1 * y2;
+    determ -= x2 * y1;
+
+    shoelacesum += determ;
+
+    shoelacesum = abs(shoelacesum) / 2; // Take the absolute value and divide by 2 to get the area
+    cout << "shoelacesum is " << shoelacesum << endl;
+
+  // for (auto v: grid) {
+  //   // string str(v.begin(),v.end());
+  //   // cout << str << endl;
+  //   bool count = false;
+  //   bool can_off = false;
+  //   int cursum = 0;
+  //   for (char c: v) {
+
+  //     if (count) {
+  //       if (c == '.') {
+  //         cursum++;
+  //         can_off = true;
+  //       } else {
+  //         if (can_off) {
+  //           sum+=cursum;
+  //           cursum = 0;
+  //           count = false;
+  //           can_off = false;
+  //         }
+  //       }
+  //     } else {
+  //       if (c == '#') {
+  //         count = true;
+  //         can_off = false;
+  //       }
+  //     }
+
+  //   }
+  // }
+  sum=sum/2+shoelacesum + 1;
   cout << "sum is now " << sum << endl;
+
 
   return 0;
 }
@@ -141,3 +167,4 @@ int main() {
 // 54914 too high
 // after accounting for not counting periods to the right of an unbounded #
 // 45683 too low
+// 47139 after some ridiculous hacking
