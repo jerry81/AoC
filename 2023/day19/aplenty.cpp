@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -29,24 +29,35 @@ vector<string> split_by(string s, char c) {
   return newTokens;
 }
 unordered_map<string, vector<string>> workflows;
+unordered_map<string, int> PROP_MAPPING = {
+    {"x", 0}, {"m", 1}, {"a", 2}, {"s", 3}};
 
 bool run(vector<int> props, string k) {
   vector<string> wf = workflows[k];
-  for (string s: wf) {
+  for (string s : wf) {
     if (s.find(':') != string::npos) {
       // cause effect case
       vector<string> spl_res = split_by(s, ':');
       string left = spl_res[0];
+      char comparator = left.find('>') != string::npos ? '>' : '<';
+      vector<string> spl_left = split_by(left, comparator);
+      int propidx = PROP_MAPPING[spl_left[0]];
+      int compared_val = stoi(spl_left[1]);
+      bool check = props[propidx] > compared_val;
+      if (comparator == '<') check = !check;
+
       string right = spl_res[1];
-      cout << "left is " << left << endl;
-    } else {
-      if (s == "A") { cout << "a" << endl; return true; }
+      if (!check) continue;
 
-      if (s == "R") { cout << "r" << endl; return false; }
-
-      // it's another key
-      return run(props,s);
+      s = right;
     }
+
+    if (s == "A") return true;
+
+    if (s == "R") return false;
+
+    // it's another key
+    return run(props, s);
   }
   return false;
 }
@@ -86,7 +97,10 @@ int main() {
     long long int sum = 0;
     for (int i : v) sum += i;
 
-    if (run(v, "in")) res += sum;
+    if (run(v, "in")) {
+      cout << "SUCCESS" << endl;
+      res += sum;
+    }
     // go through workflow - if pass then add to res
   }
   cout << "res is " << res << endl;
