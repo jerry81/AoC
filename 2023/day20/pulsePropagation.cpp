@@ -30,6 +30,7 @@ vector<string> split_by_str(string s, string delim) {
     s.erase(0, pos + delim.length()); /* erase() function store the current
                                          positon and move to next token. */
   }
+  res.push_back(s);
   return res;
 }
 
@@ -42,7 +43,7 @@ int main() {
   vector<string> signals = read_lines_into_vec();
   unordered_map<string, Signal> signals_map;
   for (string s: signals) {
-    vector<string> tokens = split_by_str(s, "->");
+    vector<string> tokens = split_by_str(s, " -> ");
     cout << "tokens " << endl;
     for (string s2: tokens) cout << s2 << endl;
   }
