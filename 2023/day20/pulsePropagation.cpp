@@ -137,7 +137,6 @@ int main() {
   queue<string> q;
   vector<string> signals = read_lines_into_vec();
   unordered_map<string, Signal*> signals_map;
-  int non_defaults = 0;
   for (string s : signals) {
     vector<string> tokens = split_by_str(s, " -> ");
     Signal* sig = new Signal();
@@ -148,7 +147,6 @@ int main() {
     string trimmed = tokens[0].substr(1);
     signals_map[trimmed] = sig;
   }
-  std::cout << "here " << endl;
   for (auto [k, v] : signals_map) {
     for (string s2 : v->outputs) {
       if (signals_map.find(s2) == signals_map.end()) continue;
@@ -157,20 +155,26 @@ int main() {
     }
   }
 
-  std::cout << "here " << endl;
   int low = 0;
   int high = 0;
-  non_defaults = 1;
+  int divisor = 0;
   for (int i = 0; i < 1000; ++i) {
-    queue<tuple<string, bool, string>> q;
-    std::cout << "nd count " << non_defaults << endl;
-    if (non_defaults == 0) {
-      std::cout << "cycle ends at " << i << endl;
-      break;
+    if (i!=0) {
+      bool def = true;
+      for (auto [k,v]: signals_map) {
+        if (!v->is_default()) {
+          def = false;
+          break;
+        }
+      }
+
+      if (def) {
+        divisor = i;
+        break;
+      }
     }
-    non_defaults = 0;
+    queue<tuple<string, bool, string>> q;
     q.push({"roadcaster", false, "button"});
-    std::cout << "button gives 1 low " << endl;
     low += 1;
 
     while (!q.empty()) {
@@ -192,8 +196,6 @@ int main() {
                                                previous_signal, signals_map);
         low += l;
         high += h;
-        if (!is_d) ++non_defaults;
-        std::cout << current_signal << " gives " << l << "," << h << endl;
         while (!q2.empty()) {
           nq.push(q2.front());
           q2.pop();
@@ -204,5 +206,7 @@ int main() {
   }
   cout << "low is " << low << endl;
   cout << "high is " << high << endl;
+  cout << "low total is " << low * (1000/divisor) << endl;
+  cout << "high total is " << high * (1000/divisor) << endl;
   return 0;
 }
