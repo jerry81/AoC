@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -146,9 +146,9 @@ int main() {
       while (!q.empty()) {
         pair<string, bool> cur = q.front();
         q.pop();
+        if (signals_map.find(cur.first) == signals_map.end()) continue;
         Signal* cur_s = signals_map[cur.first];
         auto [q2, l, h] = cur_s->process(cur.second, cur.first);
-        cout << cur.first << " returns " << l << "," << h << endl;
         low += l;
         high += h;
         while (!q2.empty()) {
