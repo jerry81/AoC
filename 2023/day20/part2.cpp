@@ -158,22 +158,10 @@ int main() {
   int low = 0;
   int high = 0;
   int divisor = 0;
-  for (int i = 0; i < 1000; ++i) {
-    if (i!=0) {
-      bool def = true;
-      for (auto [k,v]: signals_map) {
-        if (!v->is_default()) {
-          def = false;
-          break;
-        }
-      }
-
-      if (def) {
-        cout << "early break " << endl;
-        divisor = i;
-        break;
-      }
-    }
+  int count = 0;
+  while (true) {
+    count++;
+    int low_count = 0;
     queue<tuple<string, bool, string>> q;
     q.push({"roadcaster", false, "button"});
     low += 1;
@@ -193,8 +181,14 @@ int main() {
         auto [current_signal, signal_value, previous_signal] = cur;
         if (signals_map.find(current_signal) == signals_map.end()) continue;
         Signal* cur_s = signals_map[current_signal];
+        // cout << "currentsignal " << current_signal << endl;
+        if (current_signal == "rx") cout << "hit " << endl;
+                if (current_signal == "cx") cout << "hit cx " << signal_value << endl;
+
+        if (!signal_value && current_signal == "rx") low_count++;
         auto [q2, l, h, is_d] = cur_s->process(signal_value, current_signal,
                                                previous_signal, signals_map);
+
         low += l;
         high += h;
         while (!q2.empty()) {
@@ -202,13 +196,21 @@ int main() {
           q2.pop();
         }
       }
+
       q = nq;
     }
+          // cout << "low_count is " << low_count << endl;
+
+    if (low_count == 1) {
+      cout << "count is " << count << endl;
+      return 0;
+    }
   }
+  cout << "count is " << count << endl;
   cout << "low is " << low << endl;
   cout << "high is " << high << endl;
-  cout << "divisor is " << divisor << endl;
-  cout << "low total is " << low * (1000/divisor) << endl;
-  cout << "high total is " << high * (1000/divisor) << endl;
+  // cout << "divisor is " << divisor << endl;
+  // cout << "low total is " << low * (1000/divisor) << endl;
+  // cout << "high total is " << high * (1000/divisor) << endl;
   return 0;
 }

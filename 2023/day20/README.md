@@ -103,35 +103,12 @@ In the second example, after pushing the button 1000 times, 4250 low pulses and 
 
 Consult your module configuration; determine the number of low pulses and high pulses that would be sent after pushing the button 1000 times, waiting for all pulses to be fully handled after each push of the button. What do you get if you multiply the total number of low pulses sent by the total number of high pulses sent?
 
-broadcaster -> a,b,c
-%a -> b
-%b -> c
-%c -> inv
-&inv -> a
+Your puzzle answer was 739960225.
 
-low -> broadcaster
-low -> a (on)
-low -> b (on)
-low -> c (on)
-a high -> b (do nothing)
-b high -> c (do nothing)
-c high -> inv (c high)
-inv low -> a
-a low -> b (off)
-b low -> c (off)
-c low -> inv (c low)
-inv high -> a
+The first half of this puzzle is complete! It provides one gold star: *
 
-- so just one "chain reaction"
+--- Part Two ---
+The final machine responsible for moving the sand down to Island Island has a module attached named rx. The machine turns on when a single low pulse is sent to rx.
 
-
-% low input -> off to on -> high output
-% low input -> on to off -> low output
-% high input do nothing
-
-always start with low -> broadcaster
-
-& remembers recent pulse from each input
-remember is all high pulses, send low pulse
-else high pulse
+Reset all modules to their default states. Waiting for all pulses to be fully handled after each button press, what is the fewest number of button presses required to deliver a single low pulse to the module named rx?
 
