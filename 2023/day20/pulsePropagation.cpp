@@ -59,8 +59,9 @@ struct Signal {
   }
   bool all_on() { return high_input_count == input_count; }
 
-  tuple<queue<tuple<string, bool,string>>, int, int> process(
-      bool input, string signal_name, string previous, unordered_map<string, Signal*> &sig_map) {
+  tuple<queue<tuple<string, bool, string>>, int, int> process(
+      bool input, string signal_name, string previous,
+      unordered_map<string, Signal*>& sig_map) {
     tuple<queue<tuple<string, bool, string>>, int, int> ret;
     int lows = 0;
     int highs = 0;
@@ -91,6 +92,10 @@ struct Signal {
             last_inputs[previous] = false;
           }
         }
+        sig_map[signal_name]->high_input_count = high_input_count;
+        sig_map[signal_name]->last_inputs = last_inputs;
+        sig_map[signal_name]->input_count = input_count;
+
         bool output_signal = !all_on();
         for (string s : outputs) {
           get<0>(ret).push({s, output_signal, signal_name});
@@ -152,8 +157,11 @@ int main() {
 
   for (int i = 0; i < 1000; ++i) {
     queue<tuple<string, bool, string>> q;
+
     q.push({"roadcaster", false, "button"});
+    cout << "button gives 1 low " << endl;
     low += 1;
+
     while (!q.empty()) {
       queue<tuple<string, bool, string>> nq;
       //  cout << "q has " << endl;
@@ -168,9 +176,11 @@ int main() {
         auto [current_signal, signal_value, previous_signal] = cur;
         if (signals_map.find(current_signal) == signals_map.end()) continue;
         Signal* cur_s = signals_map[current_signal];
-        auto [q2, l, h] = cur_s->process(signal_value, current_signal, previous_signal, signals_map);
+        auto [q2, l, h] = cur_s->process(signal_value, current_signal,
+                                         previous_signal, signals_map);
         low += l;
         high += h;
+        cout << current_signal << " gives " << l << "," << h << endl;
         while (!q2.empty()) {
           nq.push(q2.front());
           q2.pop();
