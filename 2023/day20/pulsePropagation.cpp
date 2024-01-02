@@ -42,12 +42,16 @@ struct Signal {
   int high_input_count = 0;
   int input_count = 0;
   bool all_on() { return high_input_count == input_count; }
-  queue<pair<string, bool>> process(bool input, string signal_name) {
-    queue<pair<string, bool>> ret;
+  tuple<queue<pair<string, bool>>, int, int> process(bool input,
+                                                     string signal_name) {
+    tuple<queue<pair<string, bool>>, int, int> ret;
+    int lows = 0;
+    int highs = 0;
     switch (type) {
       case 'b': {
         for (string s : outputs) {
-          ret.push({s, 0});
+          get<0>(ret).push({s, false});
+          lows++;
         }
         break;
       }
@@ -71,15 +75,27 @@ struct Signal {
           }
         }
         bool output_signal = !all_on();
-        for (string s: outputs) {
-          ret.push({s,output_signal});
+        for (string s : outputs) {
+          get<0>(ret).push({s, output_signal});
+          if (output_signal) {
+            highs++;
+          } else {
+            lows++;
+          }
         }
         break;
       }
       case '%': {
         if (!input) {
           state = !state;
-          for (string s: outputs) ret.push({s, state});
+          for (string s : outputs) {
+            get<0>(ret).push({s, state});
+            if (state) {
+              highs++;
+            } else {
+              lows++;
+            }
+          }
         }
         break;
       }
@@ -87,6 +103,8 @@ struct Signal {
         // no-op
       }
     }
+    get<1>(ret) = lows;
+    get<2>(ret) = highs;
     return ret;
   }
   void print() {
@@ -112,7 +130,28 @@ int main() {
   }
   int low = 0;
   int high = 0;
+
   for (int i = 0; i < 1000; ++i) {
+    queue<pair<string, bool>> q;
+    q.push({"roadcaster", false});
+    while (!q.empty()) {
+      queue<pair<string, bool>> nq;
+      while (!q.empty()) {
+        pair<string, bool> cur = q.front();
+        q.pop();
+        Signal* cur_s = signals_map[cur.first];
+        auto [q2, l, h] = cur_s->process(cur.second, cur.first);
+        low += l;
+        high += h;
+        while (!q2.empty()) {
+          nq.push(q2.front());
+          q2.pop();
+        }
+      }
+      q = nq;
+    }
   }
+  cout << "low is " << low << endl;
+  cout << "high is " << high << endl;
   return 0;
 }
