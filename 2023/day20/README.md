@@ -109,6 +109,22 @@ broadcaster -> a,b,c
 %c -> inv
 &inv -> a
 
+low -> broadcaster
+low -> a (on)
+low -> b (on)
+low -> c (on)
+a high -> b (do nothing)
+b high -> c (do nothing)
+c high -> inv (c high)
+inv low -> a
+a low -> b (off)
+b low -> c (off)
+c low -> inv (c low)
+inv high -> a
+
+- so just one "chain reaction"
+
+
 % low input -> off to on -> high output
 % low input -> on to off -> low output
 % high input do nothing
