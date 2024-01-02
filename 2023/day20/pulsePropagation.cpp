@@ -134,13 +134,21 @@ int main() {
   for (int i = 0; i < 1000; ++i) {
     queue<pair<string, bool>> q;
     q.push({"roadcaster", false});
+    low+=1;
     while (!q.empty()) {
       queue<pair<string, bool>> nq;
+    //  cout << "q has " << endl;
+      // auto copy = q;
+      // while (!copy.empty()) {
+      //   cout << copy.front().first << endl;;
+      //   copy.pop();
+      // }
       while (!q.empty()) {
         pair<string, bool> cur = q.front();
         q.pop();
         Signal* cur_s = signals_map[cur.first];
         auto [q2, l, h] = cur_s->process(cur.second, cur.first);
+        cout << cur.first << " returns " << l << "," << h << endl;
         low += l;
         high += h;
         while (!q2.empty()) {
