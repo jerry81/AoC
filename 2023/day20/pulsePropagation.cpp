@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const string FNAME = "input.txt";
+const string FNAME = "sm2.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -41,42 +41,59 @@ struct Signal {
   unordered_map<string, bool> last_inputs;
   int high_input_count = 0;
   int input_count = 0;
+  bool is_default() {
+    bool ret = true;
+    switch (type) {
+      case '%': {
+        return state == false;
+        break;
+      }
+      case '&': {
+        return high_input_count == 0;
+        break;
+      }
+      default: {
+      }
+    }
+    return ret;
+  }
   bool all_on() { return high_input_count == input_count; }
-  tuple<queue<pair<string, bool>>, int, int> process(bool input,
-                                                     string signal_name) {
-    tuple<queue<pair<string, bool>>, int, int> ret;
+
+  tuple<queue<tuple<string, bool,string>>, int, int> process(
+      bool input, string signal_name, string previous, unordered_map<string, Signal*> &sig_map) {
+    tuple<queue<tuple<string, bool, string>>, int, int> ret;
     int lows = 0;
     int highs = 0;
     switch (type) {
       case 'b': {
         for (string s : outputs) {
-          get<0>(ret).push({s, false});
+          get<0>(ret).push({s, false, signal_name});
           lows++;
         }
         break;
       }
       case '&': {
         if (input) {
-          if (last_inputs.find(signal_name) == last_inputs.end()) {
-            last_inputs[signal_name] = true;
+          if (last_inputs.find(previous) == last_inputs.end()) {
+            last_inputs[previous] = true;
             high_input_count++;
             input_count++;
-          } else if (!last_inputs[signal_name]) {
+          } else if (!last_inputs[previous]) {
             high_input_count++;
-            last_inputs[signal_name] = true;
+            last_inputs[previous] = true;
           }
         } else {
-          if (last_inputs.find(signal_name) == last_inputs.end()) {
-            last_inputs[signal_name] = false;
+          if (last_inputs.find(previous) == last_inputs.end()) {
+            last_inputs[previous] = false;
             input_count++;
-          } else if (last_inputs[signal_name]) {
+          } else if (last_inputs[previous]) {
             high_input_count--;
-            last_inputs[signal_name] = false;
+            last_inputs[previous] = false;
           }
         }
         bool output_signal = !all_on();
         for (string s : outputs) {
-          get<0>(ret).push({s, output_signal});
+          get<0>(ret).push({s, output_signal, signal_name});
           if (output_signal) {
             highs++;
           } else {
@@ -88,8 +105,9 @@ struct Signal {
       case '%': {
         if (!input) {
           state = !state;
+          sig_map[signal_name]->state = state;
           for (string s : outputs) {
-            get<0>(ret).push({s, state});
+            get<0>(ret).push({s, state, signal_name});
             if (state) {
               highs++;
             } else {
@@ -118,6 +136,7 @@ int main() {
   queue<string> q;
   vector<string> signals = read_lines_into_vec();
   unordered_map<string, Signal*> signals_map;
+  int non_defaults = 0;
   for (string s : signals) {
     vector<string> tokens = split_by_str(s, " -> ");
     Signal* sig = new Signal();
@@ -132,23 +151,24 @@ int main() {
   int high = 0;
 
   for (int i = 0; i < 1000; ++i) {
-    queue<pair<string, bool>> q;
-    q.push({"roadcaster", false});
-    low+=1;
+    queue<tuple<string, bool, string>> q;
+    q.push({"roadcaster", false, "button"});
+    low += 1;
     while (!q.empty()) {
-      queue<pair<string, bool>> nq;
-    //  cout << "q has " << endl;
+      queue<tuple<string, bool, string>> nq;
+      //  cout << "q has " << endl;
       // auto copy = q;
       // while (!copy.empty()) {
       //   cout << copy.front().first << endl;;
       //   copy.pop();
       // }
       while (!q.empty()) {
-        pair<string, bool> cur = q.front();
+        tuple<string, bool, string> cur = q.front();
         q.pop();
-        if (signals_map.find(cur.first) == signals_map.end()) continue;
-        Signal* cur_s = signals_map[cur.first];
-        auto [q2, l, h] = cur_s->process(cur.second, cur.first);
+        auto [current_signal, signal_value, previous_signal] = cur;
+        if (signals_map.find(current_signal) == signals_map.end()) continue;
+        Signal* cur_s = signals_map[current_signal];
+        auto [q2, l, h] = cur_s->process(signal_value, current_signal, previous_signal, signals_map);
         low += l;
         high += h;
         while (!q2.empty()) {
