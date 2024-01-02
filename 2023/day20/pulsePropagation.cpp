@@ -70,12 +70,21 @@ struct Signal {
             last_inputs[signal_name] = false;
           }
         }
+        bool output_signal = !all_on();
+        for (string s: outputs) {
+          ret.push({s,output_signal});
+        }
         break;
       }
       case '%': {
+        if (!input) {
+          state = !state;
+          for (string s: outputs) ret.push({s, state});
+        }
         break;
       }
       default: {
+        // no-op
       }
     }
     return ret;
