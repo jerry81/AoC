@@ -46,11 +46,9 @@ struct Signal {
     switch (type) {
       case '%': {
         return state == false;
-        break;
       }
       case '&': {
         return high_input_count == 0;
-        break;
       }
       default: {
       }
@@ -59,10 +57,10 @@ struct Signal {
   }
   bool all_on() { return high_input_count == input_count; }
 
-  tuple<queue<tuple<string, bool, string>>, int, int> process(
+  tuple<queue<tuple<string, bool, string>>, int, int, bool> process(
       bool input, string signal_name, string previous,
       unordered_map<string, Signal*>& sig_map) {
-    tuple<queue<tuple<string, bool, string>>, int, int> ret;
+    tuple<queue<tuple<string, bool, string>>, int, int, bool> ret;
     int lows = 0;
     int highs = 0;
     switch (type) {
@@ -78,7 +76,6 @@ struct Signal {
           if (last_inputs.find(previous) == last_inputs.end()) {
             last_inputs[previous] = true;
             high_input_count++;
-            input_count++;
           } else if (!last_inputs[previous]) {
             high_input_count++;
             last_inputs[previous] = true;
@@ -86,7 +83,6 @@ struct Signal {
         } else {
           if (last_inputs.find(previous) == last_inputs.end()) {
             last_inputs[previous] = false;
-            input_count++;
           } else if (last_inputs[previous]) {
             high_input_count--;
             last_inputs[previous] = false;
@@ -94,7 +90,6 @@ struct Signal {
         }
         sig_map[signal_name]->high_input_count = high_input_count;
         sig_map[signal_name]->last_inputs = last_inputs;
-        sig_map[signal_name]->input_count = input_count;
 
         bool output_signal = !all_on();
         for (string s : outputs) {
@@ -128,6 +123,7 @@ struct Signal {
     }
     get<1>(ret) = lows;
     get<2>(ret) = highs;
+    get<3>(ret) = is_default();
     return ret;
   }
   void print() {
@@ -152,14 +148,29 @@ int main() {
     string trimmed = tokens[0].substr(1);
     signals_map[trimmed] = sig;
   }
+  std::cout << "here " << endl;
+  for (auto [k, v] : signals_map) {
+    for (string s2 : v->outputs) {
+      if (signals_map.find(s2) == signals_map.end()) continue;
+
+      signals_map[s2]->input_count++;
+    }
+  }
+
+  std::cout << "here " << endl;
   int low = 0;
   int high = 0;
-
+  non_defaults = 1;
   for (int i = 0; i < 1000; ++i) {
     queue<tuple<string, bool, string>> q;
-
+    std::cout << "nd count " << non_defaults << endl;
+    if (non_defaults == 0) {
+      std::cout << "cycle ends at " << i << endl;
+      break;
+    }
+    non_defaults = 0;
     q.push({"roadcaster", false, "button"});
-    cout << "button gives 1 low " << endl;
+    std::cout << "button gives 1 low " << endl;
     low += 1;
 
     while (!q.empty()) {
@@ -170,17 +181,19 @@ int main() {
       //   cout << copy.front().first << endl;;
       //   copy.pop();
       // }
+
       while (!q.empty()) {
         tuple<string, bool, string> cur = q.front();
         q.pop();
         auto [current_signal, signal_value, previous_signal] = cur;
         if (signals_map.find(current_signal) == signals_map.end()) continue;
         Signal* cur_s = signals_map[current_signal];
-        auto [q2, l, h] = cur_s->process(signal_value, current_signal,
-                                         previous_signal, signals_map);
+        auto [q2, l, h, is_d] = cur_s->process(signal_value, current_signal,
+                                               previous_signal, signals_map);
         low += l;
         high += h;
-        cout << current_signal << " gives " << l << "," << h << endl;
+        if (!is_d) ++non_defaults;
+        std::cout << current_signal << " gives " << l << "," << h << endl;
         while (!q2.empty()) {
           nq.push(q2.front());
           q2.pop();
