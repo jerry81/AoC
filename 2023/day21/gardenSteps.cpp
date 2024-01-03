@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -38,22 +38,42 @@ int main() {
   }
   queue<pair<int, int>> q;
   q.push(start);
-
+    int count = 0;
   while (!q.empty()) {
     queue<pair<int, int>> nq;
     set<pair<int, int>> visited;
+
+    if (count <= 64) {
+
+      cout << "when cont is " << count << " sz is " << q.size() << endl;
+
+    } else {
+     return 0;
+    }
+    cout << "a round has passed " << endl;
     while (!q.empty()) {
       auto [y, x] = q.front();
       q.pop();
-      if (visited.find({y, x}) != visited.end()) continue;
 
-      visited.insert({y, x});
       for (auto [dy, dx] : DIRECTIONS) {
         int ny = dy + y;
         int nx = dx + x;
 
         if (ny >= h || nx >= w || ny < 0 || nx < 0) continue;
+
+        if (grid[ny][nx] == '#') continue;
+
+        pair<int, int> n = {ny, nx};
+
+        if (visited.find(n) != visited.end()) continue;
+
+        visited.insert(n);
+
+        nq.push(n);
       }
     }
+    q = nq;
+    count++;
   }
+  return 0;
 }
