@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 using namespace std;
@@ -38,7 +39,7 @@ bool compareByMinOfZ(
 
 int main() {
   vector<pair<tuple<int, int, int>, tuple<int, int, int>>> slabs_processed;
-
+  int result = 0;
   vector<string> slabs = read_lines_into_vec();
   int mxy = 0;
   int mxx = 0;
@@ -100,14 +101,20 @@ int main() {
         }
       }
     }
-    // low to high
+  }
 
-    // for (int x = 0; x < mxx; ++x) {
-    //   for (int y = 0; y < mxy; ++y) {
-    //     cout << heights[x][y];
-    //   }
-    //   cout << "\n";
-    // }
+  int cur_idx = 0;
+  for (auto [a, b] : slabs_processed2) {
+    auto [lx, ly, lz] = a;
+    auto [hx, hy, hz] = b;
+
+    unordered_set<int> above_blocks;
+    int idx_above = hz + 1;
+    if (idx_above >= mxz) {
+      result++;
+      continue;
+    }
+    cur_idx++;
   }
   //   for (int x = 0; x < mxx; ++x) {
   //   for (int y = 0; y < mxy; ++y) {
