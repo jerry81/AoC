@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const string FNAME = "input.txt";
+const string FNAME = "sm.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -60,7 +60,7 @@ int main() {
     mxx = max(mxx, x2);
     mxz = max(mxz, z1);
     mxz = max(mxz, z2);
-    slabs_processed.push_back({{x1, y1, stoi(tk1[2])}, {x2, y2, stoi(tk2[2])}});
+    slabs_processed.push_back({{x1, y1, z1}, {x2, y2, z2}});
   }
   mxy += 1;
   mxx += 1;
@@ -89,14 +89,14 @@ int main() {
       }
     }
 
-    int lz = mxh + 1;
-    int hz = mxh + 1 + (hz - lz);
+    int nlz = mxh + 1;
+    int nhz = nlz + (hz - lz);
 
-    slabs_processed2.push_back({{lx, ly, lz}, {hx, hy, hz}});
+    slabs_processed2.push_back({{lx, ly, nlz}, {hx, hy, nhz}});
 
     for (int x = lx; x <= hx; ++x) {
       for (int y = ly; y <= hy; ++y) {
-        for (int z = lz; z <= hz; ++z) {
+        for (int z = nlz; z <= nhz; ++z) {
           cube[x][y][z] = slabs_processed2.size() - 1;
         }
       }
@@ -114,6 +114,13 @@ int main() {
       result++;
       continue;
     }
+
+    for (int x = lx; x <= hx; ++x) {
+      for (int y = ly; y <= hy; ++y) {
+        above_blocks.insert(cube[x][y][idx_above]);
+      }
+    }
+    for (auto item : above_blocks) cout << item << endl;
     cur_idx++;
   }
   //   for (int x = 0; x < mxx; ++x) {
