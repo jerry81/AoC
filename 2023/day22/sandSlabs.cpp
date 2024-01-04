@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -37,5 +38,13 @@ int main() {
     vector<string> tk2 = split_by(tokens[1], ',');
     slabs_processed.push_back({{stoi(tk1[0]), stoi(tk1[1]), stoi(tk1[2])},
                                {stoi(tk2[0]), stoi(tk2[1]), stoi(tk2[2])}});
+  }
+
+  for (auto [a,b] : slabs_processed) {
+    auto [a1,a2,a3] = a;
+    auto [b1,b2,b3] = b;
+    cout << "slab a xyz" << a1<<","<<a2<<","<<a3<<endl;
+      cout << "slab b xyz" << b1<<","<<b2<<","<<b3<<endl;
+
   }
 }
