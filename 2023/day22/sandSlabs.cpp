@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -61,6 +61,9 @@ int main() {
   vector<vector<int>> heights(mxx, vector<int>(mxy, 0));
 
   sort(slabs_processed.begin(), slabs_processed.end(), compareByMinOfZ);
+
+  vector<pair<tuple<int, int, int>, tuple<int, int, int>>> slabs_processed2;
+
   // sort by min z
   for (auto [a, b] : slabs_processed) {
     auto [lx, ly, lz] = a;
@@ -76,16 +79,29 @@ int main() {
         heights[cx][cy] = mxh + 1 + (hz - lz);
       }
     }
-    cout << "slab low is " << lx << "," << ly << "," << lz << endl;
-    cout << "slab high is " << hx << "," << hy << "," << hz << endl;
-    for (int x = 0; x < mxx; ++x) {
-      for (int y = 0; y < mxy; ++y) {
-        cout << heights[x][y];
-      }
-      cout << "\n";
-    }
+
+    slabs_processed2.push_back(
+        {{lx, ly, mxh + 1}, {hx, hy, mxh + 1 + (hz - lz)}});
+        // low to high
+
+    // for (int x = 0; x < mxx; ++x) {
+    //   for (int y = 0; y < mxy; ++y) {
+    //     cout << heights[x][y];
+    //   }
+    //   cout << "\n";
+    // }
   }
+    //   for (int x = 0; x < mxx; ++x) {
+    //   for (int y = 0; y < mxy; ++y) {
+    //     cout << heights[x][y];
+    //   }
+    //   cout << "\n";
+    // }
 
   // find max height for all the intersecting squares
   // push "down"
+  // finally, how do we check blocks that would "fall"
+  // examine one layer above surface area of block
+  // list of blocks
+  // for each block above, check minus block removed, if its surface area has a block below.
 }
