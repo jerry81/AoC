@@ -125,6 +125,7 @@ int main() {
     if (above_blocks.empty()) {
       cout << "cur_idx is valid " << cur_idx << endl;
       result++;
+      cur_idx++;
       continue;
     }
     bool ok = true;
@@ -175,5 +176,8 @@ int main() {
 /*
 
 1479 TOO HIGH
+THE vertically standing blocks are calculated incorectly
 
+
+BAM!
 */
