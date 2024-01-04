@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -118,7 +118,8 @@ int main() {
     for (int x = lx; x <= hx; ++x) {
       for (int y = ly; y <= hy; ++y) {
         int above_owner = cube[x][y][idx_above];
-        if (above_owner >= 0 && above_owner != cur_idx) above_blocks.insert(above_owner);
+        if (above_owner >= 0 && above_owner != cur_idx)
+          above_blocks.insert(above_owner);
       }
     }
     if (above_blocks.empty()) {
@@ -132,17 +133,18 @@ int main() {
       // get count of items below slab
       auto [lx, ly, lz] = a;
       auto [hx, hy, hz] = b;
-      int below_idx = lz-1;
+      int below_idx = lz - 1;
       if (below_idx < 1) continue;
       unordered_set<int> below_blocks;
-      for (int x = lx; x <=hx; ++x) {
-        for (int y = ly; y <=hy; ++y) {
+      for (int x = lx; x <= hx; ++x) {
+        for (int y = ly; y <= hy; ++y) {
           int below_owner = cube[x][y][below_idx];
-           if (below_owner >= 0 && below_owner != cur_idx) below_blocks.insert(below_owner);
+          if (below_owner >= 0 && below_owner != cur_idx)
+            below_blocks.insert(below_owner);
         }
       }
       if (below_blocks.empty()) {
-        ok=false;
+        ok = false;
         break;
       }
     }
@@ -169,3 +171,9 @@ int main() {
   // for each block above, check minus block removed, if its surface area has a
   // block below.
 }
+
+/*
+
+1479 TOO HIGH
+
+*/
