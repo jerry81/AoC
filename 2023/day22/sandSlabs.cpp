@@ -1,12 +1,12 @@
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <iostream>
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -28,6 +28,15 @@ vector<string> split_by(string s, char c) {
   return newTokens;
 }
 
+bool compareByMinOfZ(
+    const pair<tuple<int, int, int>, tuple<int, int, int>>& a,
+    const pair<tuple<int, int, int>, tuple<int, int, int>>& b) {
+
+  int minOfThirdA = min(get<2>(a.first), get<2>(a.second));
+  int minOfThirdB = min(get<2>(b.first), get<2>(b.second));
+  return minOfThirdA > minOfThirdB;
+}
+
 int main() {
   vector<pair<tuple<int, int, int>, tuple<int, int, int>>> slabs_processed;
 
@@ -40,11 +49,16 @@ int main() {
                                {stoi(tk2[0]), stoi(tk2[1]), stoi(tk2[2])}});
   }
 
-  for (auto [a,b] : slabs_processed) {
-    auto [a1,a2,a3] = a;
-    auto [b1,b2,b3] = b;
-    cout << "slab a xyz" << a1<<","<<a2<<","<<a3<<endl;
-      cout << "slab b xyz" << b1<<","<<b2<<","<<b3<<endl;
+
+
+  sort(slabs_processed.begin(), slabs_processed.end(), compareByMinOfZ);
+  // sort by min z
+  for (auto [a, b] : slabs_processed) {
+    auto [a1, a2, a3] = a;
+    auto [b1, b2, b3] = b;
+    cout << "slab low is " << a1 << "," << a2 << "," << a3 << endl;
+    cout << "slab high is " << b1 << "," << b2 << "," << b3 << endl;
 
   }
+
 }
