@@ -42,6 +42,7 @@ int main() {
   vector<string> slabs = read_lines_into_vec();
   int mxy = 0;
   int mxx = 0;
+  int mxz = 0;
   for (string s : slabs) {
     vector<string> tokens = split_by(s, '~');
     vector<string> tk1 = split_by(tokens[0], ',');
@@ -50,10 +51,14 @@ int main() {
     int y1 = stoi(tk1[1]);
     int x2 = stoi(tk2[0]);
     int y2 = stoi(tk2[1]);
+    int z1 = stoi(tk1[2]);
+    int z2 = stoi(tk2[2]);
     mxy = max(mxy, y1);
     mxy = max(mxy, y2);
     mxx = max(mxx, x1);
     mxx = max(mxx, x2);
+    mxz = max(mxz, z1);
+    mxz = max(mxz, z2);
     slabs_processed.push_back({{x1, y1, stoi(tk1[2])}, {x2, y2, stoi(tk2[2])}});
   }
   mxy += 1;
@@ -63,6 +68,9 @@ int main() {
   sort(slabs_processed.begin(), slabs_processed.end(), compareByMinOfZ);
 
   vector<pair<tuple<int, int, int>, tuple<int, int, int>>> slabs_processed2;
+
+  vector<vector<vector<int>>> cube(
+      mxx + 1, vector<vector<int>>(mxy + 1, vector<int>(mxz + 1, -1)));
 
   // sort by min z
   for (auto [a, b] : slabs_processed) {
@@ -80,9 +88,19 @@ int main() {
       }
     }
 
-    slabs_processed2.push_back(
-        {{lx, ly, mxh + 1}, {hx, hy, mxh + 1 + (hz - lz)}});
-        // low to high
+    int lz = mxh + 1;
+    int hz = mxh + 1 + (hz - lz);
+
+    slabs_processed2.push_back({{lx, ly, lz}, {hx, hy, hz}});
+
+    for (int x = lx; x <= hx; ++x) {
+      for (int y = ly; y <= hy; ++y) {
+        for (int z = lz; z <= hz; ++z) {
+          cube[x][y][z] = slabs_processed2.size() - 1;
+        }
+      }
+    }
+    // low to high
 
     // for (int x = 0; x < mxx; ++x) {
     //   for (int y = 0; y < mxy; ++y) {
@@ -91,17 +109,18 @@ int main() {
     //   cout << "\n";
     // }
   }
-    //   for (int x = 0; x < mxx; ++x) {
-    //   for (int y = 0; y < mxy; ++y) {
-    //     cout << heights[x][y];
-    //   }
-    //   cout << "\n";
-    // }
+  //   for (int x = 0; x < mxx; ++x) {
+  //   for (int y = 0; y < mxy; ++y) {
+  //     cout << heights[x][y];
+  //   }
+  //   cout << "\n";
+  // }
 
   // find max height for all the intersecting squares
   // push "down"
   // finally, how do we check blocks that would "fall"
   // examine one layer above surface area of block
   // list of blocks
-  // for each block above, check minus block removed, if its surface area has a block below.
+  // for each block above, check minus block removed, if its surface area has a
+  // block below.
 }
