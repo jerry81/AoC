@@ -7,7 +7,20 @@
 
 using namespace std;
 
-const string FNAME = "input.txt";
+const string FNAME = "sm.txt";
+
+/*
+
+1.  no more h and w constraints
+
+2.  some converter for negative numbers to wrap around and mod
+
+3.  brute or look for math pattern
+4.  brute force will TLE
+
+5.  need some kind of DP
+  - store number of neighbors for squares, but this will doublecount some squares
+*/
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
