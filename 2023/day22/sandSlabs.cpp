@@ -117,12 +117,43 @@ int main() {
 
     for (int x = lx; x <= hx; ++x) {
       for (int y = ly; y <= hy; ++y) {
-        above_blocks.insert(cube[x][y][idx_above]);
+        int above_owner = cube[x][y][idx_above];
+        if (above_owner >= 0 && above_owner != cur_idx) above_blocks.insert(above_owner);
       }
     }
-    for (auto item : above_blocks) cout << item << endl;
+    if (above_blocks.empty()) {
+      cout << "cur_idx is valid " << cur_idx << endl;
+      result++;
+      continue;
+    }
+    bool ok = true;
+    for (auto item : above_blocks) {
+      auto [a, b] = slabs_processed2[item];
+      // get count of items below slab
+      auto [lx, ly, lz] = a;
+      auto [hx, hy, hz] = b;
+      int below_idx = lz-1;
+      if (below_idx < 1) continue;
+      unordered_set<int> below_blocks;
+      for (int x = lx; x <=hx; ++x) {
+        for (int y = ly; y <=hy; ++y) {
+          int below_owner = cube[x][y][below_idx];
+           if (below_owner >= 0 && below_owner != cur_idx) below_blocks.insert(below_owner);
+        }
+      }
+      if (below_blocks.empty()) {
+        ok=false;
+        break;
+      }
+    }
+    if (ok) {
+      cout << cur_idx << " is valid " << endl;
+      result++;
+    }
+
     cur_idx++;
   }
+  cout << "result " << result << endl;
   //   for (int x = 0; x < mxx; ++x) {
   //   for (int y = 0; y < mxy; ++y) {
   //     cout << heights[x][y];
