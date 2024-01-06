@@ -3,6 +3,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -21,6 +22,8 @@ vector<string> read_lines_into_vec() {
 const vector<pair<int, int>> DIRECTIONS = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
 long long int LOW_NUM = -9999999999;
+
+map<pair<int,int>, long long int> memo; // y,x
 
 long long int dfsbt(vector<string> &grid, int &h, int &w, int y, int x, set<pair<int, int>> visited) {
   visited.insert({y, x});
@@ -43,17 +46,17 @@ long long int dfsbt(vector<string> &grid, int &h, int &w, int y, int x, set<pair
 
         mx = max(mx, 1 + dfsbt(grid, h, w, y + dy, x + dx,  visited));
       }
-      return mx;
+      return memo[{y,x}] = mx;
     }
     case '>': {
       if (visited.find({y, x + 1}) != visited.end()) return LOW_NUM;
 
-      return 1 + dfsbt(grid, h, w, y, x + 1, visited);
+      return memo[{y,x}] = 1 + dfsbt(grid, h, w, y, x + 1, visited);
     }
     case 'v': {
       if (visited.find({y + 1, x}) != visited.end()) return LOW_NUM;
 
-      return 1 + dfsbt(grid, h, w, y + 1, x, visited);
+      return memo[{y,x}] = 1 + dfsbt(grid, h, w, y + 1, x, visited);
     }
     default: {
       cout << "unhandled case for " << cursq << endl;
