@@ -33,6 +33,8 @@ long long int dfsbt(vector<string> &grid, int &h, int &w, int y, int x, set<pair
 
   if (cursq == '#') return LOW_NUM;
 
+  if (memo.find({y,x}) != memo.end()) return memo[{y,x}];
+
   switch (cursq) {
     case '.': {
       if (y == h - 1) {
