@@ -18,6 +18,8 @@ vector<string> read_lines_into_vec() {
   return lines;
 }
 
+const vector<pair<int, int>> DIRECTIONS = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
 /*
 direction
 0 free
@@ -28,13 +30,34 @@ long long int dfsbt(vector<string> &grid, int &h, int &w, int y, int x,
                     int direction, set<pair<int, int>> visited) {
   visited.insert({y, x});
   if (y < 0 || x < 0 || y >= h || x >= w) return -1;
+
   int cursq = grid[y][x];
+
+  if (cursq == '#') return -1;
+
   switch (cursq) {
     case '.': {
+      if (y == h - 1) return 0;
       // can we choose direction
-    }
-    case '#': {
-      return -1;
+      if (direction == 0) {
+        // return max of the 4 directions
+        long long int mx = -1;
+        for (auto [dy, dx] : DIRECTIONS) {
+          if (visited.find({y+dy, x+dx}) != visited.end()) continue;
+
+          mx = max(mx, dfsbt(grid,h,w,y+dy,x+dx,0,visited));
+        }
+        return mx;
+      } else if (direction == 1) {
+        // go down
+        if (visited.find({y + 1, x}) != visited.end()) return -1;
+
+        return 1 + dfsbt(grid, h, w, y + 1, x, 1, visited);
+      } else {
+        if (visited.find({y, x + 1}) != visited.end()) return -1;
+
+        return 1 + dfsbt(grid, h, w, y, x + 1, 2, visited);
+      }
     }
     case '>': {
       if (visited.find({y, x + 1}) != visited.end()) return -1;
@@ -44,11 +67,11 @@ long long int dfsbt(vector<string> &grid, int &h, int &w, int y, int x,
       return 1 + dfsbt(grid, h, w, y, x + 1, 2, visited);
     }
     case 'v': {
-      if (visited.find({y+1, x}) != visited.end()) return -1;
+      if (visited.find({y + 1, x}) != visited.end()) return -1;
 
       if (direction == 2) return -1;
 
-      return 1 + dfsbt(grid, h, w, y+1, x, 1, visited);
+      return 1 + dfsbt(grid, h, w, y + 1, x, 1, visited);
     }
     default: {
       cout << "unhandled case for " << cursq << endl;
