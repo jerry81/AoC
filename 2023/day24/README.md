@@ -66,3 +66,8 @@ However, you'll need to search a much larger test area if you want to see if any
 Considering only the X and Y axes, check all pairs of hailstones' future paths for intersections. How many of these intersections occur within the test area?
 
 To begin, get your puzzle input.
+
+## LESSON LEARNED
+
+- i was terribly misled by passing the small example with the wrong understanding of the rules!
+- hasty generalization, anecdotal fallacy
