@@ -47,8 +47,8 @@ vector<string> read_lines_into_vec() {
 unordered_set<int> crossed;
 // const long long int MIN = 7;
 // const long long int MAX = 27;
-const long long int MIN = 200000000000000;
-const long long int MAX = 400000000000000;
+const long long int MIN = 2e14;
+const long long int MAX = 4e14;
 
 long double intersect(Hail h1, Hail h2) {
   long double time;
@@ -56,20 +56,26 @@ long double intersect(Hail h1, Hail h2) {
   auto [xb, yb, __] = h2.pos;
   auto [dxa, dya, ___] = h1.vel;
   auto [dxb, dyb, ____] = h2.vel;
-  long double m = (long double)dya / (long double)dxa;  // 1
-  long double b = ya - (m * (long double)xa);
+  long double m = (long double) ((long double)dya / (long double)dxa);  // 1
+  long double b = (long double) ((long double)ya - (m * (long double)xa));
   // slope is dya / dxa
   // we want intercept top and bottom
 
-  long double n = (long double)dyb / (long double)dxb;
-  long double c = yb - (n * (long double)xb);
+  long double n = (long double) ((long double)dyb / (long double)dxb);
+  long double c = (long double)((long double)yb - ((long double)(n * (long double)xb)));
 
-  long long int x = (c - b) / (m - n);
-  long long int y = (m * x) + b;
+  long double x = (c - b) / (m - n);
+  long double y = (m * x) + b;
+
+  // cout << "n " << n << endl;
+  // cout << "m " << m << endl;
+
+
 
   time = (y - ya) / dya;
-  bool valid = (long long int)x >= MIN && (long long int)x <= MAX &&
-               (long long int)y >= MIN && (long long int)y <= MAX;
+  long double time2 = (y - yb) / dyb;
+  bool valid = (long double)x >= MIN && (long double)x <= MAX &&
+               (long double)y >= MIN && (long double)y <= MAX && time2 >= 0;
   return valid ? time : -1;
 }
 
@@ -107,12 +113,10 @@ int main() {
 
   sort(intersections.begin(), intersections.end(), compareIntersections);
   for (auto [a,b,_] : intersections) {
-    if (crossed.find(a) != crossed.end()) continue;
-    if (crossed.find(b) != crossed.end()) continue;
+    // if (crossed.find(a) != crossed.end()) continue;
+    // if (crossed.find(b) != crossed.end()) continue;
 
     res++;
-    crossed.insert(a);
-    crossed.insert(b);
   }
 
   cout << res << endl;
