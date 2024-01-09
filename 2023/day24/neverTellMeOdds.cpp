@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 using namespace std;
 
@@ -43,6 +44,8 @@ vector<string> read_lines_into_vec() {
   return lines;
 }
 
+unordered_set<int> crossed;
+
 const long long int MIN = 7;
 const long long int MAX = 27;
 bool intersect(Hail h1, Hail h2) {
@@ -54,13 +57,17 @@ bool intersect(Hail h1, Hail h2) {
   double b =  ya - (m*(double)xa);
   // slope is dya / dxa
   // we want intercept top and bottom
-  cout << "dyb " << dyb << endl;
 
   double n = (double) dyb / (double) dxb;
   double c = yb - (n*(double)xb);
 
-
-  return true;
+  double x = (c-b) / (m-n);
+  double y = (m*x) + b;
+  cout << "x " << x << endl;
+  cout << "y " << y << endl;
+  bool res = x > MIN && x <= MAX && y > MIN && y <= MAX;
+  cout << "will return " << res << endl;
+  return res;
 }
 
 int main() {
