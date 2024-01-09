@@ -45,11 +45,20 @@ vector<string> read_lines_into_vec() {
 
 const long long int MIN = 7;
 const long long int MAX = 27;
-bool intersect(Hail a, Hail b) {
-  auto [xa, ya, _] = a.pos;
-  auto [xb, yb, _] = b.pos;
-  auto [dxa, dya, _] = a.vel;
-  auto [dxb, dyb, _] = b.vel;
+bool intersect(Hail h1, Hail h2) {
+  auto [xa, ya, _] = h1.pos;
+  auto [xb, yb, __] = h2.pos;
+  auto [dxa, dya, ___] = h1.vel;
+  auto [dxb, dyb, ____] = h2.vel;
+  double m = (double) dya / (double) dxa; // 1
+  double b =  ya - (m*(double)xa);
+  // slope is dya / dxa
+  // we want intercept top and bottom
+  cout << "dyb " << dyb << endl;
+
+  double n = (double) dyb / (double) dxb;
+  double c = yb - (n*(double)xb);
+
 
   return true;
 }
