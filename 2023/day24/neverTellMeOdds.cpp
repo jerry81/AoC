@@ -63,10 +63,7 @@ bool intersect(Hail h1, Hail h2) {
 
   double x = (c-b) / (m-n);
   double y = (m*x) + b;
-  cout << "x " << x << endl;
-  cout << "y " << y << endl;
   bool res = x > MIN && x <= MAX && y > MIN && y <= MAX;
-  cout << "will return " << res << endl;
   return res;
 }
 
@@ -88,8 +85,17 @@ int main() {
   int res = 0;
   for (int i = 0; i < sz - 1; ++i) {
     Hail a = hails[i];
+
     for (int j = i + 1; j < sz; ++j) {
-      if (intersect(a, hails[j])) res++;
+      if (crossed.find(j) != crossed.end()) continue;
+      if (crossed.find(i) != crossed.end()) continue;
+
+      if (intersect(a, hails[j])) {
+        crossed.insert(i);
+        crossed.insert(j);
+        res++;
+
+      }
     }
   }
   cout << res << endl;
