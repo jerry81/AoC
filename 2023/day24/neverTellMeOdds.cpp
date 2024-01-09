@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -9,6 +10,13 @@ const string FNAME = "sm.txt";
 struct Hail {
   tuple<int, int, int> pos;
   tuple<int, int, int> vel;
+  void print() {
+    cout << "printing hail! " << endl;
+    cout << "pos is " << endl;
+    cout << get<0>(pos) << " " << get<1>(pos) << " " << get<2>(pos) << endl;
+    cout << "vel is " << endl;
+    cout << get<0>(vel) << " " << get<1>(vel) << " " << get<2>(vel) << endl;
+  }
 };
 
 vector<string> split_by_str(string s, string delim) {
@@ -21,6 +29,7 @@ vector<string> split_by_str(string s, string delim) {
     s.erase(0, pos + delim.length()); /* erase() function store the current
                                          positon and move to next token. */
   }
+  res.push_back(s);
   return res;
 }
 
@@ -38,7 +47,7 @@ int main() {
   vector<string> inp = read_lines_into_vec();
   vector<Hail> hails;
   for (string s : inp) {
-    vector<string> tokens = split_by_str(s, " @ ");
+    vector<string> tokens = split_by_str(s, "@");
     string t1 = tokens[0];
     string t2 = tokens[1];
     Hail h;
@@ -46,6 +55,7 @@ int main() {
     vector<string> t2s = split_by_str(t2, ", ");
     h.pos = {stoi(t1s[0]), stoi(t1s[1]), stoi(t1s[2])};
     h.vel = {stoi(t2s[0]), stoi(t2s[1]), stoi(t2s[2])};
+    hails.push_back(h);
   }
   return 0;
 }
