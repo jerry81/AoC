@@ -9,8 +9,8 @@ using namespace std;
 const string FNAME = "sm.txt";
 
 struct Hail {
-  tuple<int, int, int> pos;
-  tuple<int, int, int> vel;
+  tuple<long long int, long long int, long long int> pos;
+  tuple<long long int, long long int, long long int> vel;
   void print() {
     cout << "printing hail! " << endl;
     cout << "pos is " << endl;
@@ -45,25 +45,30 @@ vector<string> read_lines_into_vec() {
 }
 
 unordered_set<int> crossed;
-
 const long long int MIN = 7;
 const long long int MAX = 27;
+// const long long int MIN = 200000000000000;
+// const long long int MAX = 400000000000000;
+
+
 bool intersect(Hail h1, Hail h2) {
   auto [xa, ya, _] = h1.pos;
   auto [xb, yb, __] = h2.pos;
   auto [dxa, dya, ___] = h1.vel;
   auto [dxb, dyb, ____] = h2.vel;
-  double m = (double) dya / (double) dxa; // 1
-  double b =  ya - (m*(double)xa);
+  long double m = (long double) dya / (long double) dxa; // 1
+  long double b =  ya - (m*(long double)xa);
   // slope is dya / dxa
   // we want intercept top and bottom
 
-  double n = (double) dyb / (double) dxb;
-  double c = yb - (n*(double)xb);
+  long double n = (long double) dyb / (long double) dxb;
+  long double c = yb - (n*(long double)xb);
 
-  double x = (c-b) / (m-n);
-  double y = (m*x) + b;
-  bool res = x > MIN && x <= MAX && y > MIN && y <= MAX;
+  long long int x = (c-b) / (m-n);
+  long long int y = (m*x) + b;
+  cout << "x is " << x << endl;
+  cout << "y is " << y << endl;
+  bool res = (long long int) x >= MIN && (long long int) x <= MAX && (long long int) y >= MIN && (long long int) y <= MAX;
   return res;
 }
 
@@ -77,8 +82,8 @@ int main() {
     Hail h;
     vector<string> t1s = split_by_str(t1, ", ");
     vector<string> t2s = split_by_str(t2, ", ");
-    h.pos = {stoi(t1s[0]), stoi(t1s[1]), stoi(t1s[2])};
-    h.vel = {stoi(t2s[0]), stoi(t2s[1]), stoi(t2s[2])};
+    h.pos = {stoll(t1s[0]), stoll(t1s[1]), stoll(t1s[2])};
+    h.vel = {stoll(t2s[0]), stoll(t2s[1]), stoll(t2s[2])};
     hails.push_back(h);
   }
   int sz = hails.size();
@@ -87,17 +92,23 @@ int main() {
     Hail a = hails[i];
 
     for (int j = i + 1; j < sz; ++j) {
-      if (crossed.find(j) != crossed.end()) continue;
-      if (crossed.find(i) != crossed.end()) continue;
 
       if (intersect(a, hails[j])) {
         crossed.insert(i);
         crossed.insert(j);
-        res++;
 
       }
     }
   }
-  cout << res << endl;
+  std::cout << "MIN IS " <<  MIN << endl;
+std::cout << "MAX IS " <<  MAX << endl;
+  cout << crossed.size() << endl;
+
   return 0;
 }
+
+/*
+
+150 too low
+
+*/
