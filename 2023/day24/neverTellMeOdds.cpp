@@ -43,6 +43,10 @@ vector<string> read_lines_into_vec() {
   return lines;
 }
 
+bool intersect(Hail a, Hail b) {
+  return true;
+}
+
 int main() {
   vector<string> inp = read_lines_into_vec();
   vector<Hail> hails;
@@ -57,5 +61,15 @@ int main() {
     h.vel = {stoi(t2s[0]), stoi(t2s[1]), stoi(t2s[2])};
     hails.push_back(h);
   }
+  int sz = hails.size();
+  int res = 0;
+  for (int i = 0; i < sz-1; ++i) {
+    Hail a = hails[i];
+    for (int j = i+1; j < sz; ++j) {
+
+      if (intersect(a, hails[j])) res++;
+    }
+  }
+  cout << res << endl;
   return 0;
 }
