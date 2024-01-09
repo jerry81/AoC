@@ -43,7 +43,14 @@ vector<string> read_lines_into_vec() {
   return lines;
 }
 
+const long long int MIN = 7;
+const long long int MAX = 27;
 bool intersect(Hail a, Hail b) {
+  auto [xa, ya, _] = a.pos;
+  auto [xb, yb, _] = b.pos;
+  auto [dxa, dya, _] = a.vel;
+  auto [dxb, dyb, _] = b.vel;
+
   return true;
 }
 
@@ -63,10 +70,9 @@ int main() {
   }
   int sz = hails.size();
   int res = 0;
-  for (int i = 0; i < sz-1; ++i) {
+  for (int i = 0; i < sz - 1; ++i) {
     Hail a = hails[i];
-    for (int j = i+1; j < sz; ++j) {
-
+    for (int j = i + 1; j < sz; ++j) {
       if (intersect(a, hails[j])) res++;
     }
   }
