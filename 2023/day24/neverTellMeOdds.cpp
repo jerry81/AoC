@@ -1,12 +1,12 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <vector>
 #include <unordered_set>
+#include <vector>
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 struct Hail {
   tuple<long long int, long long int, long long int> pos;
@@ -45,33 +45,39 @@ vector<string> read_lines_into_vec() {
 }
 
 unordered_set<int> crossed;
-const long long int MIN = 7;
-const long long int MAX = 27;
-// const long long int MIN = 200000000000000;
-// const long long int MAX = 400000000000000;
+// const long long int MIN = 7;
+// const long long int MAX = 27;
+const long long int MIN = 200000000000000;
+const long long int MAX = 400000000000000;
 
-
-bool intersect(Hail h1, Hail h2) {
+long double intersect(Hail h1, Hail h2) {
+  long double time;
   auto [xa, ya, _] = h1.pos;
   auto [xb, yb, __] = h2.pos;
   auto [dxa, dya, ___] = h1.vel;
   auto [dxb, dyb, ____] = h2.vel;
-  long double m = (long double) dya / (long double) dxa; // 1
-  long double b =  ya - (m*(long double)xa);
+  long double m = (long double)dya / (long double)dxa;  // 1
+  long double b = ya - (m * (long double)xa);
   // slope is dya / dxa
   // we want intercept top and bottom
 
-  long double n = (long double) dyb / (long double) dxb;
-  long double c = yb - (n*(long double)xb);
+  long double n = (long double)dyb / (long double)dxb;
+  long double c = yb - (n * (long double)xb);
 
-  long long int x = (c-b) / (m-n);
-  long long int y = (m*x) + b;
-  cout << "x is " << x << endl;
-  cout << "y is " << y << endl;
-  bool res = (long long int) x >= MIN && (long long int) x <= MAX && (long long int) y >= MIN && (long long int) y <= MAX;
-  return res;
+  long long int x = (c - b) / (m - n);
+  long long int y = (m * x) + b;
+
+  time = (y - ya) / dya;
+  bool valid = (long long int)x >= MIN && (long long int)x <= MAX &&
+               (long long int)y >= MIN && (long long int)y <= MAX;
+  return valid ? time : -1;
 }
 
+vector<tuple<int, int, long double>> intersections;
+
+static bool compareIntersections(tuple<int, int, long double> a, tuple<int, int, long double> b) {
+  return get<2>(a) < get<2>(b);
+}
 int main() {
   vector<string> inp = read_lines_into_vec();
   vector<Hail> hails;
@@ -92,17 +98,24 @@ int main() {
     Hail a = hails[i];
 
     for (int j = i + 1; j < sz; ++j) {
-
-      if (intersect(a, hails[j])) {
-        crossed.insert(i);
-        crossed.insert(j);
-
+      long double t = intersect(a, hails[j]);
+      if (t >= 0) {
+        intersections.push_back({i, j, t});
       }
     }
   }
-  std::cout << "MIN IS " <<  MIN << endl;
-std::cout << "MAX IS " <<  MAX << endl;
-  cout << crossed.size() << endl;
+
+  sort(intersections.begin(), intersections.end(), compareIntersections);
+  for (auto [a,b,_] : intersections) {
+    if (crossed.find(a) != crossed.end()) continue;
+    if (crossed.find(b) != crossed.end()) continue;
+
+    res++;
+    crossed.insert(a);
+    crossed.insert(b);
+  }
+
+  cout << res << endl;
 
   return 0;
 }
