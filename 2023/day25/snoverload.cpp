@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 
@@ -32,13 +34,20 @@ vector<string> split_by_str(string s, string delim) {
 
 int main() {
   // brute force: create disjoint set omitting 012 013 014... 2^n possibilities
+  unordered_map<string, unordered_set<string>> e;
   vector<string> lines = read_lines_into_vec();
   for (string s: lines) {
     vector<string> tokens = split_by_str(s,": ");
     string parent = tokens[0];
     vector<string> neighbors = split_by_str(tokens[1], " ");
-    cout << parent << "'s neighbors are " << endl;
-    for (string t: neighbors) cout << t << endl;
+    for (string n: neighbors) {
+      e[parent].insert(n);
+      e[n].insert(parent);
+    }
+  }
+  for (auto [k,st]: e) {
+    cout << k << " has neighbors " <<endl;
+    for (string s: st) cout << s << endl;
   }
   return 0;
 }
@@ -85,4 +94,8 @@ classic problem
 - karger is popular
   - randomized algo
   - repeatedly "contract" random edges until only 2 nodes
+    - contract means to merge two nodes into one node
+    - all the edges leading to both nodes are reconnected to a single node
+    - edges between the two nodes are removed altogether
+    - last edges standing when there are only 2 nodes left are the min cut
 */
