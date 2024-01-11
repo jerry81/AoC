@@ -37,7 +37,6 @@ vector<string> split_by_str(string s, string delim) {
 }
 
 int main() {
-  // brute force: create disjoint set omitting 012 013 014... 2^n possibilities
   unordered_map<string, unordered_set<string>> e;
   srand((unsigned)time(0));
 
@@ -56,7 +55,8 @@ int main() {
                            // element, provide access to it, treat as rvalue
       paths.pop();
       if (path.back() == to) return path;
-      for (auto edge_to : edges.at(path.back())) { // [] is not available for const
+      for (auto edge_to :
+           edges.at(path.back())) {  // [] is not available for const
         if (visited.find(edge_to) != visited.end())
           continue;  // instead of find, but only c++ 20
 
@@ -70,6 +70,21 @@ int main() {
     return vector<string>({});
   };
 
+  const auto connectivity = [&](auto &edges, string from, string to) {
+    auto clone = edges;
+    auto path = bfs(clone, from, to);
+    int res = 0;
+    while (!path.empty()) {
+      res++;
+      for (auto [edgea, edgeb] : path | pairwise) {
+        clone[edgea].erase(edgeb);
+        clone[edgeb].erase(edgea);
+      }
+      bfs(clone, from, to);
+    }
+    return res;
+  };
+
   vector<string> lines = read_lines_into_vec();
   for (string s : lines) {
     vector<string> tokens = split_by_str(s, ": ");
@@ -80,7 +95,6 @@ int main() {
       e[n].insert(parent);
     }
   }
-
 
   return 0;
 }
