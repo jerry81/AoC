@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <ranges> // for pairwise
 
 using namespace std;
 
@@ -76,7 +77,9 @@ int main() {
     int res = 0;
     while (!path.empty()) {
       res++;
-      for (auto [edgea, edgeb] : path | pairwise) {
+      for (int i = 0; i < path.size()-1; ++i) {
+        string edgea = path[i];
+        string edgeb = path[i+1];
         clone[edgea].erase(edgeb);
         clone[edgeb].erase(edgea);
       }
@@ -95,6 +98,8 @@ int main() {
       e[n].insert(parent);
     }
   }
+
+  cout << "connectivity is " << connectivity(e,"jqt","frs") << endl;
 
   return 0;
 }
