@@ -61,7 +61,6 @@ unordered_set<string> karger_min_cut(
 
 
 int main() {
-  // brute force: create disjoint set omitting 012 013 014... 2^n possibilities
   unordered_map<string, unordered_set<string>> e;
   srand((unsigned)time(0));
 

@@ -3,15 +3,15 @@
 #include <iostream>
 #include <iterator>
 #include <queue>
+#include <ranges>  // for pairwise
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include <ranges> // for pairwise
 
 using namespace std;
 
-const string FNAME = "sm.txt";
+const string FNAME = "input.txt";
 
 vector<string> read_lines_into_vec() {
   ifstream strm(FNAME);
@@ -68,7 +68,7 @@ int main() {
             next));  // move is an optimizer.  still not sure when to use it.
       }
     }
-    return vector<string>({});
+    return vector<string>{};
   };
 
   const auto connectivity = [&](auto &edges, string from, string to) {
@@ -76,14 +76,14 @@ int main() {
     auto path = bfs(clone, from, to);
     int res = 0;
     while (!path.empty()) {
-      res++;
-      for (int i = 0; i < path.size()-1; ++i) {
+      ++res;
+      for (int i = 0; i < path.size() - 1; ++i) {
         string edgea = path[i];
-        string edgeb = path[i+1];
+        string edgeb = path[i + 1];
         clone[edgea].erase(edgeb);
         clone[edgeb].erase(edgea);
       }
-      bfs(clone, from, to);
+      path = bfs(clone, from, to);
     }
     return res;
   };
@@ -99,7 +99,43 @@ int main() {
     }
   }
 
-  cout << "connectivity is " << connectivity(e,"jqt","frs") << endl;
+  auto fullbfs = [&](auto edges, string start) {
+    unordered_set<string> visited;
+    queue<string> q;
+    q.push(start);
+    visited.insert(start);
+    while (!q.empty()) {
+      string cur = q.front();
+      q.pop();
+      for (auto neigh: e[cur]) {
+        if (visited.find(neigh) != visited.end()) continue;
+
+        visited.insert(neigh);
+        q.push(neigh);
+      }
+    }
+    return visited.size();
+  };
+
+  vector<pair<string, string>> pairs;
+  for (auto [k, _] : e) { // wow.  find connectivity between ADJACENT nodes (edges) where connectivity is just 3
+    for (auto [k2, _] : e) {
+      if (k == k2) continue;
+
+      if (e[k].find(k2) == e[k].end()) continue;
+
+      if (connectivity(e, k, k2) == 3) {
+        pairs.push_back({k, k2});
+      }
+    }
+  }
+  for (auto [a,b]: pairs) {
+    e[a].erase(b);
+    e[b].erase(a);
+  }
+
+  cout << "final and comparing " << pairs[0].first << " and " << pairs[0].second << endl;
+  cout << "res is " << fullbfs(e,pairs[0].first) * fullbfs(e,pairs[0].second) << endl;
 
   return 0;
 }
