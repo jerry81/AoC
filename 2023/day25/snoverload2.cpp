@@ -56,8 +56,7 @@ int main() {
                            // element, provide access to it, treat as rvalue
       paths.pop();
       if (path.back() == to) return path;
-
-      for (auto edge_to : edges[path.back()]) {
+      for (auto edge_to : edges.at(path.back())) { // [] is not available for const
         if (visited.find(edge_to) != visited.end())
           continue;  // instead of find, but only c++ 20
 
@@ -82,9 +81,6 @@ int main() {
     }
   }
 
-  auto s = begin(e)->first;
-  auto s2 = begin(e)->second.begin();
-  cout << "s is " << s << "and s2 is " << *s2 << endl;
 
   return 0;
 }
