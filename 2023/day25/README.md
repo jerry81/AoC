@@ -43,3 +43,15 @@ In this example, if you disconnect the wire between hfx/pzl, the wire between bv
 Multiplying the sizes of these groups together produces 54.
 
 Find the three wires you need to disconnect in order to divide the components into two separate groups. What do you get if you multiply the sizes of these two groups together?
+
+solution from [this link](https://medium.com/@simontoth/daily-bit-e-of-c-advent-of-code-day-25-5056674ef2ca)
+
+k-edge-connected graph - remove edges, still connected
+
+- fill in both directions (i have done this already)
+
+- bfs find paths, count paths between two nodes
+
+- iterate all pairs of adj nodes (edges) 3 pairs (edges) have connectivity of 3
+
+- finally, remove the edges and bfs (use any of the three edges and bfs off of each of those nodes)

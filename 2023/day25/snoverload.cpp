@@ -150,4 +150,11 @@ classic problem
     - last edges standing when there are only 2 nodes left are the min cut
   - as a probabilistic algorithm, it may not hit the answer each time. because
 it's node choices are random
+
+define: flow: between two nodes - number of unique paths between two nodes
+
+bfs for path finding
+find all unique paths between two nodes
+  - find a path and remove edges
+  - repeat until no more paths
 */
