@@ -46,7 +46,7 @@ use std::path::Path;
 
 fn main() -> io::Result<()> {
   // Specify the file name
-  let filename = "example.txt";
+  let filename = "input.txt";
 
   // TIL: Open the file in read-only mode (returns a Result)
   let path = Path::new(filename);
@@ -67,8 +67,10 @@ fn main() -> io::Result<()> {
   }
   l1.sort();
   l2.sort();
-  println!("l1 is {:?}", l1);
-  println!("l2 is {:?}", l2);
 
+  println!("ans is {}", l1.iter()
+    .zip(l2.iter())
+    .map(|(f,s)| (f-s).abs())
+    .sum::<i32>());
   Ok(())
 }
