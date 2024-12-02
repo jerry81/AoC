@@ -1,0 +1,81 @@
+rzs has neighbors 
+qnr
+lsr
+cmg
+rsh
+ntq has neighbors 
+jqt
+hfx
+bvb
+xhk
+bvb has neighbors 
+cmg
+rhn
+xhk
+hfx
+ntq
+lhk has neighbors 
+cmg
+nvd
+frs
+lsr
+cmg has neighbors 
+qnr
+lhk
+nvd
+bvb
+rzs
+lsr has neighbors 
+rsh
+pzl
+frs
+lhk
+rzs
+hfx has neighbors 
+xhk
+bvb
+rhn
+pzl
+ntq
+frs has neighbors 
+rsh
+qnr
+lhk
+lsr
+qnr has neighbors 
+cmg
+nvd
+frs
+rzs
+rsh has neighbors 
+frs
+pzl
+lsr
+rzs
+pzl has neighbors 
+rsh
+nvd
+lsr
+hfx
+nvd has neighbors 
+jqt
+cmg
+pzl
+qnr
+lhk
+xhk has neighbors 
+jqt
+rhn
+hfx
+bvb
+ntq
+rhn has neighbors 
+jqt
+xhk
+bvb
+hfx
+jqt has neighbors 
+rhn
+xhk
+nvd
+ntq
