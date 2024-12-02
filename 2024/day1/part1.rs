@@ -55,11 +55,15 @@ fn main() -> io::Result<()> {
   // Create a buffered reader
   let reader = io::BufReader::new(file);
 
+  let mut l1:Vec<i32> = vec![];
+  let mut l2:Vec<i32> = vec![];
   // Read the file line by line
   for line in reader.lines() {
       let line = line?; // Handle any errors while reading lines
       // Process each line here
       println!("{}", line); // Example: print each line
+      let spl: Vec<&str> = line.split_whitespace().collect(); // TIL: split_whitespace() method
+      println!("spl is {:?}", spl);
   }
 
   Ok(())
