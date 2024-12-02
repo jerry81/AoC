@@ -61,10 +61,14 @@ fn main() -> io::Result<()> {
   for line in reader.lines() {
       let line = line?; // Handle any errors while reading lines
       // Process each line here
-      println!("{}", line); // Example: print each line
       let spl: Vec<&str> = line.split_whitespace().collect(); // TIL: split_whitespace() method
-      println!("spl is {:?}", spl);
+      l1.push(spl[0].parse::<i32>().unwrap());
+      l2.push(spl[1].parse::<i32>().unwrap());
   }
+  l1.sort();
+  l2.sort();
+  println!("l1 is {:?}", l1);
+  println!("l2 is {:?}", l2);
 
   Ok(())
 }
