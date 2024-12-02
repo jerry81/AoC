@@ -43,7 +43,7 @@ use std::path::Path;
 
 fn main() -> io::Result<()> {
   // Specify the file name
-  let filename = "input.txt";
+  let filename = "example.txt";
 
   // TIL: Open the file in read-only mode (returns a Result)
   let path = Path::new(filename);
@@ -61,24 +61,33 @@ fn main() -> io::Result<()> {
       let mut prev = -1;
 
       let mut incrinit = false;
+      let mut safe = true;
       for i in spl {
         if prev < 0 {
           prev = i;
           continue;
         }
         let curdiff = i - prev;
-        if incrinit && (curdiff < 0 && incr) || (curdiff > 0 && !incr) {
-          continue;
+
+        if incrinit  {
+          if (curdiff < 0 && incr) || (curdiff > 0 && !incr) {
+            safe = false;
+            break;
+          }
         } else {
           incr = curdiff > 0;
+          incrinit = true;
         }
-
-        incrinit = true;
         prev = i;
+
         if curdiff.abs() < 1 || curdiff.abs() > 3 {
-          res+=1;
+          safe = false;
           break;
         }
+      }
+
+      if safe {
+        res+=1;
       }
   }
   println!("res is {}", res);
