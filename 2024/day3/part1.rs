@@ -40,7 +40,16 @@ fn main() -> io::Result<()> {
       let line = line?; // Handle any errors while reading lines
       println!("line is {}", line);
       if let Some(index) = line.find("mul(") {
-        println!("found at index {}", index);
+        let truncated_line = &line[index+4..];
+        if let Some(comma) = truncated_line.find(",") {
+          let first_num = &truncated_line[..comma];
+          if let Some(as_i) = first_num.parse::<i32>() {
+            println!("GOOD NUM {}", first_num);
+          } else {
+            println!("SKIPPING {}", first_num);
+          }
+        }
+        println!("truncated and is now {}", truncated_line);
       } else {
         println!("not found");
       }
