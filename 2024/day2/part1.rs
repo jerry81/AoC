@@ -57,6 +57,7 @@ fn main() -> io::Result<()> {
       let line = line?; // Handle any errors while reading lines
       // Process each line here
       let spl: Vec<i32> = line.split_whitespace().map(|item| { item.parse::<i32>().unwrap() }).collect(); // TIL: split_whitespace() method
+
       let mut incr = false;
       let mut prev = -1;
 
