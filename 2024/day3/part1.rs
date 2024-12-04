@@ -26,7 +26,7 @@ use std::path::Path;
 
 fn main() -> io::Result<()> {
   // Specify the file name
-  let filename = "input.txt";
+  let filename = "example.txt";
 
   // TIL: Open the file in read-only mode (returns a Result)
   let path = Path::new(filename);
@@ -46,6 +46,10 @@ fn main() -> io::Result<()> {
           match first_num.parse::<i32>() {
             Ok(as_i) => {
               println!("GOOD NUM {}", as_i);
+              if let Some(closer_loc) = truncated_line.find(")") {
+                let second_num = &truncated_line[comma+1..closer_loc];
+                println!("second num is {}", second_num);
+              }
             },
             Err(e) => {
               eprintln!("SKIPPING {}", e);
@@ -53,8 +57,6 @@ fn main() -> io::Result<()> {
           }
         }
         println!("truncated and is now {}", truncated_line);
-      } else {
-        println!("not found");
       }
 
   }
